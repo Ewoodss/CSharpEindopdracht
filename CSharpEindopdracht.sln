@@ -9,7 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientGui", "ClientGui\Clie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{8F61EBD2-DD0C-4747-AE4D-0B3E1C3A6BD6}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Utils", "Utils\Utils.shproj", "{5C362306-51EA-42B2-B729-BA29B9510E2D}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Utils\Utils.projitems*{2662aa49-d265-4881-8062-3ec5976d50cf}*SharedItemsImports = 5
+		Utils\Utils.projitems*{5c362306-51ea-42b2-b729-ba29b9510e2d}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

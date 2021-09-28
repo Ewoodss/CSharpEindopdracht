@@ -13,5 +13,13 @@ namespace AdminGui
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            //base.OnStartup(e);
+            MainWindow window = new MainWindow();
+            ClientViewModel VM = new ClientViewModel();
+            window.DataContext = VM;
+            window.Show();
+        }
     }
 }

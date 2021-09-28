@@ -13,5 +13,15 @@ namespace ClientGui
     /// </summary>
     public partial class App : Application
     {
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            //base.OnStartup(e);
+            MainWindow window = new MainWindow();
+            //StudentViewModel VM = new StudentViewModel();
+            //window.DataContext = VM;
+            window.Show();
+        }
+
     }
 }
