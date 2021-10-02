@@ -14,7 +14,7 @@ namespace Client
         {
 
             TcpClient tcpClient = new TcpClient(address, 5001);
-            Connection connection = new Connection(tcpClient);
+            this.connection = new Connection(tcpClient);
         }
 
         public void Start()

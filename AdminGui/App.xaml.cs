@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -17,9 +18,11 @@ namespace AdminGui
         {
             //base.OnStartup(e);
             MainWindow window = new MainWindow();
-            Admin admin = new Admin();
-            admin.start();
-            ClientViewModel VM = new ClientViewModel(admin);
+            ClientViewModel VM = new ClientViewModel();
+            Admin admin = new Admin(VM);
+            Thread t = new Thread(new ThreadStart(admin.start));
+            t.Start();
+            
             window.DataContext = VM;
             window.Show();
         }

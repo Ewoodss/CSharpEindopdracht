@@ -4,11 +4,10 @@ namespace AdminGui
 {
     public class ClientViewModel : ObservableObject
     {
-        private Admin admin;
 
-        public ClientViewModel(Admin admin)
+        public ClientViewModel()
         {
-            this.admin = admin;
+            
         }
     }
 }
