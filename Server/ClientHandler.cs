@@ -8,7 +8,7 @@ namespace Server
 {
     public class ClientHandler : Connection
     {
-        public ClientHandler(TcpClient tcpClient) : base(tcpClient)
+        public AdminHandler(Server server, TcpClient client) : base(server, client)
         {
 
         }
