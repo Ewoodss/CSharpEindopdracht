@@ -1,11 +1,13 @@
 ﻿using Framework.Util;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace AdminGui
 {
@@ -28,11 +30,24 @@ namespace AdminGui
             this.networkStream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(onRead), null);
         }
 
-        private async Task send(byte[] bytes,byte type)
-        { 
-            await this.networkStream.WriteAsync(new byte[] {type});
-            byte[] buffelength = BitConverter.GetBytes(bytes.Length);
-            await this.networkStream.WriteAsync(buffelength,0,buffelength.Length);
+
+
+        public async Task SendBytes(byte[] bytes)
+        {
+            await this.send(bytes, 0);
+        }
+
+        public async Task SendString(string text)
+        {
+            byte[] encodedText = Encoding.UTF8.GetBytes(text);
+            await this.send(encodedText, 1);
+        }
+
+        private async Task send(byte[] bytes, byte type)
+        {
+            await this.networkStream.WriteAsync(new byte[] { type });
+            byte[] bufferlength = BitConverter.GetBytes(bytes.Length);
+            await this.networkStream.WriteAsync(bufferlength, 0, bufferlength.Length);
             await this.networkStream.WriteAsync(bytes, 0, bytes.Length);
             await this.networkStream.FlushAsync();
         }
@@ -63,13 +78,12 @@ namespace AdminGui
                 else
                     break;
             }
+
             this.networkStream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(onRead), null);
         }
 
         protected virtual void onResponse(string data)
         {
-
         }
-
     }
 }
