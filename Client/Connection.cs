@@ -30,15 +30,6 @@ namespace Client
             this.networkStream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(onRead), null);
         }
 
-        private static byte[] ImageToBytes(Image img)
-        {
-            using (var stream = new MemoryStream())
-            {
-                img.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
-                return stream.ToArray();
-            }
-        }
-
         public async Task SendImage(Image img)
         {
             byte[] imageBytes = ImageToBytes(img);
@@ -55,6 +46,15 @@ namespace Client
         {
             byte[] encodedText = Encoding.UTF8.GetBytes(text);
             await this.send(encodedText, 1);
+        }
+
+        private static byte[] ImageToBytes(Image img)
+        {
+            using (var stream = new MemoryStream())
+            {
+                img.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                return stream.ToArray();
+            }
         }
 
         private async Task send(byte[] bytes, byte type)
