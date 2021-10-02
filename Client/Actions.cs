@@ -27,5 +27,10 @@ namespace Client
             return actions[actionCommand];
         }
 
+        public List<string> GetCommands()
+        {
+           return new List<string>(this.actions.Keys);
+        }
+
     }
 }
