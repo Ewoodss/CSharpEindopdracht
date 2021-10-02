@@ -7,12 +7,6 @@ namespace Server
 {
     public class ConnectionsManager
     {
-        public Connection Connection
-        {
-            get => default;
-            set
-            {
-            }
-        }
+        public List<Connection> Connections { get; private set; }
     }
 }
