@@ -65,7 +65,6 @@ namespace Client
             await this.networkStream.WriteAsync(bytes, 0, bytes.Length);
             await this.networkStream.FlushAsync();
         }
-
         private void onRead(IAsyncResult ar)
         {
             try
@@ -80,24 +79,29 @@ namespace Client
 
             while (totalBuffer.Length >= 4)
             {
-                int packetLength = BitConverter.ToInt32(totalBuffer, 0);
-                if (totalBuffer.Length >= packetLength + 4)
+                byte packetType = totalBuffer[0];
+                int packetLength = BitConverter.ToInt32(totalBuffer, 1);
+                if (totalBuffer.Length >= packetLength + 5)
                 {
-                    string data = Encoding.UTF8.GetString(totalBuffer, 4, packetLength);
+                    this.onResponse(packetType, totalBuffer.GetSubArray(5, packetLength));
 
-                    this.onResponse(data);
-
-                    totalBuffer = totalBuffer.GetSubArray(4 + packetLength, totalBuffer.Length - packetLength - 4);
+                    totalBuffer = totalBuffer.GetSubArray(5 + packetLength, totalBuffer.Length - packetLength - 5);
                 }
                 else
                     break;
             }
-
             this.networkStream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(onRead), null);
         }
 
-        protected virtual void onResponse(string data)
+        protected virtual void onResponse(byte type, byte[] data)
         {
+            if (type == 1)
+            {
+                string textData = Encoding.UTF8.GetString(totalBuffer, 5, data.Length);
+                Console.WriteLine(textData);
+            }
         }
+
+
     }
 }
