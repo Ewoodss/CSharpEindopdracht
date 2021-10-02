@@ -11,14 +11,17 @@ namespace Server
     public class Server
     {
         private string host;
-        private int port;
+        private int clientPort;
+        private int adminPort;
 
-        private TcpListener tcpListener;
+        private TcpListener clientTcpListner;
+        private TcpListener adminTcpListner;
 
-        public Server(string host, int port)
+        public Server(string host, int clientPort, int adminPort)
         {
             this.host = host;
-            this.port = port;
+            this.clientPort = clientPort;
+            this.adminPort = adminPort;
             this.ConnectionsManager = new ConnectionsManager();
         }
 
@@ -26,24 +29,44 @@ namespace Server
 
         public void Start()
         {
-            this.tcpListener = new TcpListener(IPAddress.Parse(host), this.port);
-            this.tcpListener.Start();
-            this.tcpListener.BeginAcceptTcpClient(new AsyncCallback(onConnect), null);
-            Console.WriteLine($"Started listining to {host}:{port}");
+            this.clientTcpListner = new TcpListener(IPAddress.Parse(host), this.clientPort);
+            this.adminTcpListner = new TcpListener(IPAddress.Parse(host), this.adminPort);
+
+            this.clientTcpListner.Start();
+            this.adminTcpListner.Start();
+
+            this.clientTcpListner.BeginAcceptTcpClient(new AsyncCallback(onClientConnect), null);
+            Console.WriteLine($"Started listining for clients on {host}:{clientPort}");
+
+            this.adminTcpListner.BeginAcceptTcpClient(new AsyncCallback(onAdminConnect), null);
+            Console.WriteLine($"Started listining for clients on {host}:{clientPort}");
         }
 
-        private void onConnect(IAsyncResult ar)
+        private void onClientConnect(IAsyncResult ar)
         {
-            TcpClient tcpClient = this.tcpListener.EndAcceptTcpClient(ar);
+            TcpClient tcpClient = this.clientTcpListner.EndAcceptTcpClient(ar);
 
             Console.WriteLine($"Client connected from {tcpClient.Client.RemoteEndPoint}");
 
-            Connection connection = new Connection(this, tcpClient);
+            ClientHandler connection = new ClientHandler(this, tcpClient);
             connection.Start();
             this.ConnectionsManager.AddConnection(connection);
 
-            this.tcpListener.BeginAcceptTcpClient(new AsyncCallback(onConnect), null);
+            this.clientTcpListner.BeginAcceptTcpClient(new AsyncCallback(onClientConnect), null);
         }
-        
+
+        private void onAdminConnect(IAsyncResult ar)
+        {
+            TcpClient tcpClient = this.clientTcpListner.EndAcceptTcpClient(ar);
+
+            Console.WriteLine($"Client connected from {tcpClient.Client.RemoteEndPoint}");
+
+            AdminHandler connection = new AdminHandler(this, tcpClient);
+            connection.Start();
+            this.ConnectionsManager.AddConnection(connection);
+
+            this.clientTcpListner.BeginAcceptTcpClient(new AsyncCallback(onClientConnect), null);
+        }
+
     }
 }
