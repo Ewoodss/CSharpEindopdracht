@@ -5,13 +5,20 @@ namespace AdminGui
     public class Admin
     {
         private Connection connection;
+        private ClientViewModel clientViewModel;
 
-        public Admin(string address = "localhost")
+        public Admin(ClientViewModel clientView, string address = "localhost")
         {
 
             TcpClient tcpClient = new TcpClient(address, 5001);
-            Connection connection = new Connection(tcpClient);
-
+            this.connection = new Connection(tcpClient);
+            this.clientViewModel = clientView;
         }
+
+        public void start()
+        {
+            connection.Start();
+        }
+
     }
 }
