@@ -11,14 +11,16 @@ namespace Server
 {
     public class Connection
     {
+        private Server server;
         private TcpClient client;
         private NetworkStream networkStream;
 
         private byte[] totalBuffer = new byte[0];
         private byte[] buffer = new byte[1024];
 
-        public Connection(TcpClient client)
+        public Connection(Server server, TcpClient client)
         {
+            this.server = server;
             this.client = client;
         }
 
@@ -46,6 +48,7 @@ namespace Server
             }
             catch (IOException)
             {
+                this.server.ConnectionsManager.RemoveConnection(this);
                 return;
             }
 
@@ -68,7 +71,7 @@ namespace Server
 
         protected virtual void onResponse(string data)
         {
-
+            Console.WriteLine(data);
         }
 
     }
