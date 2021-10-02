@@ -11,14 +11,16 @@ namespace Server
 {
     public class Connection
     {
+        private Server server;
         private TcpClient client;
         private NetworkStream networkStream;
 
         private byte[] totalBuffer = new byte[0];
         private byte[] buffer = new byte[1024];
 
-        public Connection(TcpClient client)
+        public Connection(Server server, TcpClient client)
         {
+            this.server = server;
             this.client = client;
         }
 
@@ -46,19 +48,19 @@ namespace Server
             }
             catch (IOException)
             {
+                this.server.ConnectionsManager.RemoveConnection(this);
                 return;
             }
 
             while (totalBuffer.Length >= 4)
             {
-                int packetLength = BitConverter.ToInt32(totalBuffer, 0);
-                if (totalBuffer.Length >= packetLength + 4)
+                byte packetType = totalBuffer[0];
+                int packetLength = BitConverter.ToInt32(totalBuffer, 1);
+                if (totalBuffer.Length >= packetLength + 5)
                 {
-                    string data = Encoding.UTF8.GetString(totalBuffer, 4, packetLength);
+                    this.onResponse(packetType, totalBuffer.GetSubArray(5, packetLength));
 
-                    this.onResponse(data);
-
-                    totalBuffer = totalBuffer.GetSubArray(4 + packetLength, totalBuffer.Length - packetLength - 4);
+                    totalBuffer = totalBuffer.GetSubArray(5 + packetLength, totalBuffer.Length - packetLength - 5);
                 }
                 else
                     break;
@@ -66,9 +68,13 @@ namespace Server
             this.networkStream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(onRead), null);
         }
 
-        protected virtual void onResponse(string data)
+        protected virtual void onResponse(byte type, byte[] data)
         {
-
+            if (type == 1)
+            {
+                string textData = Encoding.UTF8.GetString(totalBuffer, 5, data.Length);
+                Console.WriteLine(textData);
+            }
         }
 
     }
