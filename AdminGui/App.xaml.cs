@@ -18,6 +18,7 @@ namespace AdminGui
             //base.OnStartup(e);
             MainWindow window = new MainWindow();
             Admin admin = new Admin();
+            admin.start();
             ClientViewModel VM = new ClientViewModel(admin);
             window.DataContext = VM;
             window.Show();

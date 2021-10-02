@@ -9,9 +9,14 @@ namespace AdminGui
         public Admin(string address = "localhost")
         {
 
-            TcpClient tcpClient = new TcpClient(address, 5001);
+            TcpClient tcpClient = new TcpClient(address, 5002);
             Connection connection = new Connection(tcpClient);
-
         }
+
+        public void start()
+        {
+            connection.Start();
+        }
+
     }
 }

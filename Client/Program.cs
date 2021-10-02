@@ -9,9 +9,8 @@ namespace Client
         {
             Console.WriteLine("Hello World!");
             Client client = new Client();
-
-
-
+            client.Start();
+            Console.ReadLine();
         }
     }
 }
