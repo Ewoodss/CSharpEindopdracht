@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Server
 {
-    public class ClientHandler : Connection
+    public class Connection
     {
     }
 }

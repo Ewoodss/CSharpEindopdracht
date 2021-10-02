@@ -1,11 +1,9 @@
 ﻿using System;
 
-namespace Server
+namespace Client
 {
     class Program
     {
-        public Server Server {get;set;}
-
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");

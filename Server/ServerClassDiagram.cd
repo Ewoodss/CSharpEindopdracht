@@ -1,32 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Server.Program">
-    <Position X="5.75" Y="1.75" Width="1.5" />
+    <Position X="4.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Server" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="Server.ConnectionsManager">
-    <Position X="10.25" Y="2.5" Width="1.75" />
+    <Position X="9.75" Y="2" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ConnectionsManager.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Connection" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="Server.ClientHandler">
-    <Position X="9.25" Y="4" Width="1.5" />
+    <Position X="9" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ClientHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.AdminHandler">
-    <Position X="11.5" Y="4" Width="1.5" />
+    <Position X="11.75" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>AdminHandler.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="Server.Connection">
+    <Position X="10.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Connection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Server.Server">
+    <Position X="6" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Server.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ConnectionsManager" />
+    </ShowAsAssociation>
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>
