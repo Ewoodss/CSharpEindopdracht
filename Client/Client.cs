@@ -13,7 +13,7 @@ namespace Client
 
             TcpClient tcpClient = new TcpClient(address, 5001);
             Connection connection = new Connection(tcpClient);
-           
+   
 
         }
     }
