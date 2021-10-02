@@ -8,7 +8,7 @@ namespace Framework.Util
 {
     public static class ArrayUtils
     {
-        public static byte[] concat(byte[] b1, byte[] b2, int count)
+        public static byte[] Concat(byte[] b1, byte[] b2, int count)
         {
             byte[] r = new byte[b1.Length + count];
             Buffer.BlockCopy(b1, 0, r, 0, b1.Length);
