@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Threading.Tasks;
 using Framework;
 
@@ -7,29 +8,34 @@ namespace Client
 {
     public class Actions
     {
-        public delegate bool ActionHandler<T>(Connection connection, RequestData<T> request);
+        public delegate bool ActionHandler<T>( RequestData<T> request);
 
-        private Dictionary<string, ActionHandler<string>> actions;
+        private Dictionary<string, ActionHandler<object>> actions;
 
         public Actions()
         {
-            actions = new Dictionary<string, ActionHandler<string>>();
+            actions = new Dictionary<string, ActionHandler<object>>();
             PowerActions powerActions = new PowerActions(this);
 
-            actions.Add("hello", (connection, request) =>
+            actions.Add("hello", (response) =>
             {
-                request.SetData("hello back");
-                connection.SendString(JsonUtils.serializeStringData(request));
+
+                List<string> stringlist = new List<string>();
+                stringlist.Add("hello");
+                stringlist.Add("back");
+
+                response.Data = stringlist;
+                
                 return true;
             });
         }
 
-        public void AddAction(string actionCommand, ActionHandler<string> action)
+        public void AddAction(string actionCommand, ActionHandler<object> action)
         {
             actions.Add(actionCommand, action);
         }
 
-        private ActionHandler<string> GetAction(string actionCommand)
+        private ActionHandler<object> GetAction(string actionCommand)
         {
             return actions[actionCommand];
         }
@@ -41,11 +47,22 @@ namespace Client
 
         public async Task DoAction(string textData, Connection connection)
         {
-            RequestData<string> deserializeStringData = JsonUtils.deserializeStringData(textData);
+            RequestData<object> requestData = JsonUtils.deserializeStringData(textData);
 
-            ActionHandler<string> actionHandler = GetAction(deserializeStringData.GetAction());
-            actionHandler.Invoke(connection, deserializeStringData);
+            ActionHandler<object> actionHandler = GetAction(requestData.Action);
+            bool succes = actionHandler.Invoke( requestData);
 
+            //dit kan korter en beter worden geschreven ben ff de manier kwijt
+            if (succes)
+            {
+                requestData.Status = "succes";
+            }
+            else
+            {
+                requestData.Status = "failed";
+            }
+
+            await connection.SendString(JsonUtils.serializeStringData(requestData));
         }
     }
 }

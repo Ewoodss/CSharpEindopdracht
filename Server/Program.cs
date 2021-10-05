@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -8,7 +9,8 @@ namespace Server
         {
             Server server = new Server("127.0.0.1", 5001, 5002);
             server.Start();
-            Console.ReadKey();
+            //Console.ReadKey();
+            Task.Delay(-1).Wait();
         }
     }
 }

@@ -4,12 +4,12 @@ namespace Framework
 {
     public class JsonUtils
     {
-        public static RequestData<string> deserializeStringData(string dataString)
+        public static RequestData<object> deserializeStringData(string dataString)
         {
-            return JsonConvert.DeserializeObject<RequestData<string>>(dataString);
+            return JsonConvert.DeserializeObject<RequestData<object>>(dataString);
         }
 
-        public static string serializeStringData(RequestData<string> requestData)
+        public static string serializeStringData(RequestData<object> requestData)
         {
             return JsonConvert.SerializeObject(requestData);
         }

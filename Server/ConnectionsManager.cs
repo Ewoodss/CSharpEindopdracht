@@ -23,8 +23,8 @@ namespace Server
 
             this.Connections.Add(connection);
 
-            RequestData<string> testRequestData = new RequestData<string>();
-            testRequestData.SetAction("hello");
+            RequestData<object> testRequestData = new RequestData<object>();
+            testRequestData.Action = "hello";
             string serializeObject = JsonUtils.serializeStringData(testRequestData);
             Console.WriteLine("testing: " + serializeObject);
             connection.SendString(serializeObject);

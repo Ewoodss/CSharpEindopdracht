@@ -1,36 +1,24 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Framework
 {
     public class RequestData<TDataType>
     {
+        [JsonProperty] 
+        public string Action { get; set; }
+
         [JsonProperty]
-        private string _action;
+        public string Status { get; set; }
         [JsonProperty]
-        private TDataType _data;
+        public TDataType Data { get; set; }
 
-        public RequestData()
-        {
-        }
 
-        public string GetAction()
-        {
-            return _action;
-        }
 
-        public void SetAction(string action)
-        {
-            this._action = action;
-        }
 
-        public TDataType GetData()
+        public override string ToString()
         {
-            return _data;
-        }
-
-        public void SetData(TDataType data)
-        {
-            this._data = data;
+            return $"_action: {Action},_data: {Data}";
         }
     }
 }
