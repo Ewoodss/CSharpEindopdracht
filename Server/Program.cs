@@ -7,7 +7,7 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            Server server = new Server("everywhere", 5001, 5002);
+            Server server = new Server( 5001, 5002);
             server.Start();
             //Console.ReadKey();
             Task.Delay(-1).Wait();
