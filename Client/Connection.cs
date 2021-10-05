@@ -109,8 +109,5 @@ namespace Client
             }
         }
 
-
-
-
     }
 }

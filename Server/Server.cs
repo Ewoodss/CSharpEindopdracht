@@ -29,17 +29,17 @@ namespace Server
 
         public void Start()
         {
-            this.clientTcpListner = new TcpListener(IPAddress.Parse(host), this.clientPort);
-            this.adminTcpListner = new TcpListener(IPAddress.Parse(host), this.adminPort);
+            this.clientTcpListner = new TcpListener(IPAddress.Any, this.clientPort);
+            this.adminTcpListner = new TcpListener(IPAddress.Any, this.adminPort);
 
             this.clientTcpListner.Start();
             this.adminTcpListner.Start();
 
             this.clientTcpListner.BeginAcceptTcpClient(new AsyncCallback(onClientConnect), null);
-            Console.WriteLine($"Started listining for clients on {host}:{clientPort}");
+            Console.WriteLine($"Started listining for clients on {clientTcpListner.LocalEndpoint}");
 
             this.adminTcpListner.BeginAcceptTcpClient(new AsyncCallback(onAdminConnect), null);
-            Console.WriteLine($"Started listining for clients on {host}:{adminPort}");
+            Console.WriteLine($"Started listining for admins on {adminTcpListner.LocalEndpoint}");
         }
 
         private void onClientConnect(IAsyncResult ar)
