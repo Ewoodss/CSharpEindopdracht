@@ -20,11 +20,14 @@ namespace Client
 
 
             connection.actions = actions;
+            
         }
 
         public void Start()
         {
             connection.Start();
+            //dit ziet er niet uit als de juiste plek voor dit.
+            PowerActions powerActions = new PowerActions(actions);
         }
 
 

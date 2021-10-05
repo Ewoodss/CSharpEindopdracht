@@ -15,18 +15,11 @@ namespace Client
         public Actions()
         {
             actions = new Dictionary<string, ActionHandler<object>>();
-            PowerActions powerActions = new PowerActions(this);
-
-            actions.Add("hello", (response) =>
+            
+            actions.Add("GetActions", (response) =>
             {
-
-                List<string> stringlist = new List<string>();
-                stringlist.Add("hello");
-                stringlist.Add("back");
-
-                response.Data = stringlist;
-                
-                return true;
+                response.Data = GetActions();
+                return response.Data != null;
             });
         }
 
@@ -40,12 +33,12 @@ namespace Client
             return actions[actionCommand];
         }
 
-        private List<string> GetCommands()
+        private List<string> GetActions()
         {
             return new List<string>(this.actions.Keys);
         }
 
-        public async Task DoAction(string textData, Connection connection)
+        public async Task DoAction(string textData, IConnection connection)
         {
             RequestData<object> requestData = JsonUtils.deserializeStringData(textData);
 

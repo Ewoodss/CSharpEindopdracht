@@ -7,11 +7,12 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Framework;
 
 
 namespace AdminGui
 {
-    public class Connection
+    public class Connection : IConnection
     {
         private TcpClient client;
         private NetworkStream networkStream;

@@ -22,12 +22,9 @@ namespace Server
                 return;
 
             this.Connections.Add(connection);
+            
 
-            RequestData<object> testRequestData = new RequestData<object>();
-            testRequestData.Action = "hello";
-            string serializeObject = JsonUtils.serializeStringData(testRequestData);
-            Console.WriteLine("testing: " + serializeObject);
-            connection.SendString(serializeObject);
+           
         }
 
         public void RemoveConnection(Connection connection)

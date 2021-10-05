@@ -52,6 +52,7 @@ namespace Server
             connection.Start();
             this.ConnectionsManager.AddConnection(connection);
 
+
             this.clientTcpListner.BeginAcceptTcpClient(new AsyncCallback(onClientConnect), null);
         }
 

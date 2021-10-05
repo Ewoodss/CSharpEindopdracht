@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 
 namespace Client
 {
-    public class Connection
+    public class Connection : IConnection
     {
         private TcpClient client;
         private NetworkStream networkStream;
