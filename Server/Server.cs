@@ -39,7 +39,7 @@ namespace Server
             Console.WriteLine($"Started listining for clients on {host}:{clientPort}");
 
             this.adminTcpListner.BeginAcceptTcpClient(new AsyncCallback(onAdminConnect), null);
-            Console.WriteLine($"Started listining for clients on {host}:{clientPort}");
+            Console.WriteLine($"Started listining for clients on {host}:{adminPort}");
         }
 
         private void onClientConnect(IAsyncResult ar)
@@ -57,7 +57,7 @@ namespace Server
 
         private void onAdminConnect(IAsyncResult ar)
         {
-            TcpClient tcpClient = this.clientTcpListner.EndAcceptTcpClient(ar);
+            TcpClient tcpClient = this.adminTcpListner.EndAcceptTcpClient(ar);
 
             Console.WriteLine($"Client connected from {tcpClient.Client.RemoteEndPoint}");
 
@@ -65,7 +65,7 @@ namespace Server
             connection.Start();
             this.ConnectionsManager.AddConnection(connection);
 
-            this.clientTcpListner.BeginAcceptTcpClient(new AsyncCallback(onClientConnect), null);
+            this.adminTcpListner.BeginAcceptTcpClient(new AsyncCallback(onAdminConnect), null);
         }
 
     }

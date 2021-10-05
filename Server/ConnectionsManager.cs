@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Framework;
+using Newtonsoft.Json;
 
 namespace Server
 {
@@ -20,6 +22,12 @@ namespace Server
                 return;
 
             this.Connections.Add(connection);
+
+            RequestData<string> testRequestData = new RequestData<string>();
+            testRequestData.SetAction("hello");
+            string serializeObject = JsonUtils.serializeStringData(testRequestData);
+            Console.WriteLine("testing: " + serializeObject);
+            connection.SendString(serializeObject);
         }
 
         public void RemoveConnection(Connection connection)

@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace AdminGui
 {
@@ -10,7 +11,7 @@ namespace AdminGui
         public Admin(ClientViewModel clientView, string address = "localhost")
         {
 
-            TcpClient tcpClient = new TcpClient(address, 5001);
+            TcpClient tcpClient = new TcpClient(address, 5002);
             this.connection = new Connection(tcpClient);
             this.clientViewModel = clientView;
         }
@@ -18,6 +19,7 @@ namespace AdminGui
         public void start()
         {
             connection.Start();
+            //Task.Delay(-1).Wait();
         }
 
     }

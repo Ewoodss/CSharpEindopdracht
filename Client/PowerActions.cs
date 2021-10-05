@@ -1,4 +1,4 @@
-﻿using System;
+﻿   using System;
 using System.Runtime.InteropServices;
 
 namespace Client
@@ -17,11 +17,10 @@ namespace Client
 
         public PowerActions(Actions actions)
         {
-            actions.AddAction("Lock", _ => LockWorkStation());
-            actions.AddAction("LogOff", _ => ExitWindowsEx(0, 0));
-            actions.AddAction("Shutdown", _ => ExitWindowsEx(1, 0));
-            actions.AddAction("Sleep", _ => SetSuspendState(false, true, true));
-            // Application.SetSuspendState(PowerState.Suspend true, true);
+            // actions.AddAction("Lock", _ => LockWorkStation());
+            // actions.AddAction("LogOff", _ => ExitWindowsEx(0, 0));
+            // actions.AddAction("Shutdown", _ => ExitWindowsEx(1, 0));
+            // actions.AddAction("Sleep", _ => SetSuspendState(false, true, true));
         }
     }
 }

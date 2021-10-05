@@ -17,6 +17,9 @@ namespace Client
             TcpClient tcpClient = new TcpClient(address, 5001);
             this.connection = new Connection(tcpClient);
 
+
+
+            connection.actions = actions;
         }
 
         public void Start()

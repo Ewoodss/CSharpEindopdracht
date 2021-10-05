@@ -38,6 +38,11 @@ namespace Server
             await this.networkStream.WriteAsync(bytes, 0, bytes.Length);
             await this.networkStream.FlushAsync();
         }
+        public async Task SendString(string text)
+        {
+            byte[] encodedText = Encoding.UTF8.GetBytes(text);
+            await this.send(encodedText, 1);
+        }
 
         private void onRead(IAsyncResult ar)
         {

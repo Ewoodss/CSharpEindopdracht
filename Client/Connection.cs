@@ -2,11 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Framework;
+using Newtonsoft.Json;
 
 
 namespace Client
@@ -15,6 +18,7 @@ namespace Client
     {
         private TcpClient client;
         private NetworkStream networkStream;
+        public Actions actions { set; get; }
 
         private byte[] totalBuffer = new byte[0];
         private byte[] buffer = new byte[1024];
@@ -57,6 +61,7 @@ namespace Client
             }
         }
 
+
         private async Task send(byte[] bytes, byte type)
         {
             await this.networkStream.WriteAsync(new byte[] {type});
@@ -92,6 +97,7 @@ namespace Client
             }
             this.networkStream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(onRead), null);
         }
+        
 
         protected virtual void onResponse(byte type, byte[] data)
         {
@@ -99,8 +105,11 @@ namespace Client
             {
                 string textData = Encoding.UTF8.GetString(totalBuffer, 5, data.Length);
                 Console.WriteLine(textData);
+                actions.DoAction(textData, this);
             }
         }
+
+
 
 
     }
