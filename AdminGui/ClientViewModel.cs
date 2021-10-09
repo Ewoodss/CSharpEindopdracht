@@ -4,7 +4,6 @@ namespace AdminGui
 {
     public class ClientViewModel : ObservableObject
     {
-
         public ClientViewModel()
         {
             

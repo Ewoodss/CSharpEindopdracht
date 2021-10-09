@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Threading.Tasks;
-using Framework;
 
-namespace Client
+namespace Framework
 {
     public class Actions
     {
-        public delegate bool ActionHandler<T>( RequestData<T> request);
+        public delegate bool ActionHandler<TDataType>(RequestData<TDataType> request);
 
-        private Dictionary<string, ActionHandler<object>> actions;
+        private Dictionary<string, ActionHandler<dynamic>> actions;
 
         public Actions()
         {
-            actions = new Dictionary<string, ActionHandler<object>>();
+            actions = new Dictionary<string, ActionHandler<dynamic>>();
             
             actions.Add("GetActions", (response) =>
             {
@@ -23,7 +21,7 @@ namespace Client
             });
         }
 
-        public void AddAction(string actionCommand, ActionHandler<object> action)
+        public void AddAction(string actionCommand, ActionHandler<dynamic> action)
         {
             actions.Add(actionCommand, action);
         }
@@ -45,16 +43,8 @@ namespace Client
             ActionHandler<object> actionHandler = GetAction(requestData.Action);
             bool succes = actionHandler.Invoke( requestData);
 
-            //dit kan korter en beter worden geschreven ben ff de manier kwijt
-            if (succes)
-            {
-                requestData.Status = "succes";
-            }
-            else
-            {
-                requestData.Status = "failed";
-            }
-
+            requestData.Status = succes ? "succes" : "failed";
+            Console.WriteLine(requestData);
             await connection.SendString(JsonUtils.serializeStringData(requestData));
         }
     }

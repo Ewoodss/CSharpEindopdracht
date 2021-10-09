@@ -1,50 +1,72 @@
-﻿using Framework.Util;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using Framework;
+using Framework.Util;
 
-namespace Server
+namespace Framework
 {
     public class Connection : IConnection
     {
-        private Server server;
-        private TcpClient client;
+        private TcpClient tcpClient;
         private NetworkStream networkStream;
+        public Actions actions { set; get; }
 
         private byte[] totalBuffer = new byte[0];
         private byte[] buffer = new byte[1024];
 
-        public Connection(Server server, TcpClient client)
+        public Connection(TcpClient tcpClient)
         {
-            this.server = server;
-            this.client = client;
+            this.tcpClient = tcpClient;
         }
 
         public void Start()
         {
-            this.networkStream = this.client.GetStream();
+            this.networkStream = this.tcpClient.GetStream();
             this.networkStream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(onRead), null);
         }
 
-        private async Task send(byte[] bytes,byte type)
-        { 
-            await this.networkStream.WriteAsync(new byte[] {type});
-            byte[] buffelength = BitConverter.GetBytes(bytes.Length);
-            await this.networkStream.WriteAsync(buffelength,0,buffelength.Length);
-            await this.networkStream.WriteAsync(bytes, 0, bytes.Length);
-            await this.networkStream.FlushAsync();
+        public string GetRemoteIp() => tcpClient.Client.LocalEndPoint?.ToString();
+        public string GetLocalIp() => tcpClient.Client.RemoteEndPoint?.ToString();
+
+        public async Task SendImage(Image img)
+        {
+            byte[] imageBytes = ImageToBytes(img);
+            await send(imageBytes, 2);
         }
+
+
+        public async Task SendBytes(byte[] bytes)
+        {
+            await this.send(bytes, 0);
+        }
+
         public async Task SendString(string text)
         {
             byte[] encodedText = Encoding.UTF8.GetBytes(text);
             await this.send(encodedText, 1);
         }
 
+        private static byte[] ImageToBytes(Image img)
+        {
+            using (var stream = new MemoryStream())
+            {
+                img.Save(stream, System.Drawing.Imaging.ImageFormat.Jpeg);
+                return stream.ToArray();
+            }
+        }
+
+
+        private async Task send(byte[] bytes, byte type)
+        {
+            await this.networkStream.WriteAsync(new byte[] {type});
+            byte[] bufferlength = BitConverter.GetBytes(bytes.Length);
+            await this.networkStream.WriteAsync(bufferlength, 0, bufferlength.Length);
+            await this.networkStream.WriteAsync(bytes, 0, bytes.Length);
+            await this.networkStream.FlushAsync();
+        }
         private void onRead(IAsyncResult ar)
         {
             try
@@ -52,9 +74,9 @@ namespace Server
                 int receivedBytes = this.networkStream.EndRead(ar);
                 totalBuffer = ArrayUtils.Concat(totalBuffer, buffer, receivedBytes);
             }
-            catch (IOException)
+            catch (IOException e)
             {
-                this.server.ConnectionsManager.RemoveConnection(this);
+                this.onIOException(e);
                 return;
             }
 
@@ -74,14 +96,24 @@ namespace Server
             this.networkStream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(onRead), null);
         }
 
+        protected virtual void onIOException(IOException ioException)
+        {
+            return;
+        }
+
+
         protected virtual void onResponse(byte type, byte[] data)
         {
             if (type == 1)
             {
                 string textData = Encoding.UTF8.GetString(totalBuffer, 5, data.Length);
                 Console.WriteLine(textData);
+                actions.DoAction(textData, this);
             }
         }
+
+
+
 
     }
 }

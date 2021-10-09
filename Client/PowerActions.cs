@@ -1,7 +1,8 @@
 ﻿   using System;
 using System.Runtime.InteropServices;
+   using Framework;
 
-namespace Client
+   namespace Client
 {
     public class PowerActions
     {

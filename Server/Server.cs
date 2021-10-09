@@ -8,7 +8,7 @@ using System.Net;
 
 namespace Server
 {
-    public class Server
+    public partial class Server
     {
         private string host;
         private int clientPort;
@@ -48,9 +48,9 @@ namespace Server
 
             Console.WriteLine($"Client connected from {tcpClient.Client.RemoteEndPoint}");
 
-            ClientHandler connection = new ClientHandler(this, tcpClient);
+            ClientHandler connection = new ClientHandler(tcpClient,ConnectionsManager);
             connection.Start();
-            this.ConnectionsManager.AddConnection(connection);
+            this.ConnectionsManager.AddClientHandler(connection);
 
 
             this.clientTcpListner.BeginAcceptTcpClient(new AsyncCallback(onClientConnect), null);
@@ -62,9 +62,9 @@ namespace Server
 
             Console.WriteLine($"Client connected from {tcpClient.Client.RemoteEndPoint}");
 
-            AdminHandler connection = new AdminHandler(this, tcpClient);
+            AdminHandler connection = new AdminHandler(tcpClient,ConnectionsManager);
             connection.Start();
-            this.ConnectionsManager.AddConnection(connection);
+            this.ConnectionsManager.AddAdminHandler(connection);
 
             this.adminTcpListner.BeginAcceptTcpClient(new AsyncCallback(onAdminConnect), null);
         }
