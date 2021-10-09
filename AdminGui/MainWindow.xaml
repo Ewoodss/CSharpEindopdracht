@@ -6,7 +6,24 @@
         xmlns:local="clr-namespace:AdminGui"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+    <DockPanel Margin="0,0,0,0">
+        <ListView DockPanel.Dock="Left" Name="ClientList" ItemsSource="{Binding Clients, Mode=TwoWay}" SelectedItem="{Binding SelectedClient}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="IP adres" DisplayMemberBinding="{Binding IPAdress}" Width="100"></GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ListView DockPanel.Dock="Top" ItemsSource="{Binding SelectedClient.Processes, Mode=TwoWay}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Naam" Width="100" DisplayMemberBinding="{Binding Name}"></GridViewColumn>
+                    <GridViewColumn Header="PID" Width="100" DisplayMemberBinding="{Binding PID}"></GridViewColumn>
+                    <GridViewColumn Header="Sessie naam" Width="100" DisplayMemberBinding="{Binding SessionName}"></GridViewColumn>
+                    <GridViewColumn Header="Sessie nummer" Width="100" DisplayMemberBinding="{Binding SessionNumber}"></GridViewColumn>
+                    <GridViewColumn Header="Memmory %" Width="100" DisplayMemberBinding="{Binding MemoryUsage}"></GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
 </Window>

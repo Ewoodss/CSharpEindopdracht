@@ -19,9 +19,9 @@ namespace AdminGui
             //base.OnStartup(e);
             MainWindow window = new MainWindow();
             ClientViewModel VM = new ClientViewModel();
-            Admin admin = new Admin(VM);
-            Thread t = new Thread(new ThreadStart(admin.start));
-            t.Start();
+            //Admin admin = new Admin(VM);
+            //Thread t = new Thread(new ThreadStart(admin.start));
+            //t.Start();
             
             window.DataContext = VM;
             window.Show();
