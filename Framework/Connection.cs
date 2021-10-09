@@ -1,34 +1,35 @@
-﻿using Framework.Util;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Framework.Util;
 
-
-namespace Client
+namespace Framework
 {
-    public class Connection
+    public class Connection : IConnection
     {
-        private TcpClient client;
+        private TcpClient tcpClient;
         private NetworkStream networkStream;
+        public Actions actions { set; get; }
 
         private byte[] totalBuffer = new byte[0];
         private byte[] buffer = new byte[1024];
 
-        public Connection(TcpClient client)
+        public Connection(TcpClient tcpClient)
         {
-            this.client = client;
+            this.tcpClient = tcpClient;
         }
 
         public void Start()
         {
-            this.networkStream = this.client.GetStream();
+            this.networkStream = this.tcpClient.GetStream();
             this.networkStream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(onRead), null);
         }
+
+        public string GetRemoteIp() => tcpClient.Client.LocalEndPoint?.ToString();
+        public string GetLocalIp() => tcpClient.Client.RemoteEndPoint?.ToString();
 
         public async Task SendImage(Image img)
         {
@@ -57,6 +58,7 @@ namespace Client
             }
         }
 
+
         private async Task send(byte[] bytes, byte type)
         {
             await this.networkStream.WriteAsync(new byte[] {type});
@@ -65,7 +67,6 @@ namespace Client
             await this.networkStream.WriteAsync(bytes, 0, bytes.Length);
             await this.networkStream.FlushAsync();
         }
-
         private void onRead(IAsyncResult ar)
         {
             try
@@ -73,31 +74,46 @@ namespace Client
                 int receivedBytes = this.networkStream.EndRead(ar);
                 totalBuffer = ArrayUtils.Concat(totalBuffer, buffer, receivedBytes);
             }
-            catch (IOException)
+            catch (IOException e)
             {
+                this.onIOException(e);
                 return;
             }
 
             while (totalBuffer.Length >= 4)
             {
-                int packetLength = BitConverter.ToInt32(totalBuffer, 0);
-                if (totalBuffer.Length >= packetLength + 4)
+                byte packetType = totalBuffer[0];
+                int packetLength = BitConverter.ToInt32(totalBuffer, 1);
+                if (totalBuffer.Length >= packetLength + 5)
                 {
-                    string data = Encoding.UTF8.GetString(totalBuffer, 4, packetLength);
+                    this.onResponse(packetType, totalBuffer.GetSubArray(5, packetLength));
 
-                    this.onResponse(data);
-
-                    totalBuffer = totalBuffer.GetSubArray(4 + packetLength, totalBuffer.Length - packetLength - 4);
+                    totalBuffer = totalBuffer.GetSubArray(5 + packetLength, totalBuffer.Length - packetLength - 5);
                 }
                 else
                     break;
             }
-
             this.networkStream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(onRead), null);
         }
 
-        protected virtual void onResponse(string data)
+        protected virtual void onIOException(IOException ioException)
         {
+            return;
         }
+
+
+        protected virtual void onResponse(byte type, byte[] data)
+        {
+            if (type == 1)
+            {
+                string textData = Encoding.UTF8.GetString(totalBuffer, 5, data.Length);
+                Console.WriteLine(textData);
+                actions.DoAction(textData, this);
+            }
+        }
+
+
+
+
     }
 }
