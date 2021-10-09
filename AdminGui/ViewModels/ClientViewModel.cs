@@ -1,7 +1,11 @@
-﻿using Framework;
+﻿using AdminGui.Commands;
+using AdminGui.Models;
+using Framework;
 using System.Collections.ObjectModel;
+using System.Windows;
+using System.Windows.Input;
 
-namespace AdminGui
+namespace AdminGui.ViewModels
 {
     public class ClientViewModel : ObservableObject
     {
@@ -24,7 +28,7 @@ namespace AdminGui
             get { return this.clients; }
             set {
                 this.clients = value;
-                NotifyPropertyChanged();
+                NotifyPropertyChanged(); 
             }
         }
 
@@ -42,6 +46,23 @@ namespace AdminGui
                     this.selectedClient = value;
                     NotifyPropertyChanged();
                 }
+            }
+        }
+
+        private ICommand sleepCommand;
+        public ICommand SleepCommand
+        {
+            get
+            {
+                if(sleepCommand == null)
+                {
+                    sleepCommand = new RelayCommand(x => 
+                    {
+                        MessageBox.Show("Hallo");
+                    }, 
+                    x => true);
+                }
+                return sleepCommand;
             }
         }
     }

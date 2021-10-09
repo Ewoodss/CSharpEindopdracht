@@ -1,4 +1,5 @@
-﻿using System.Net.Sockets;
+﻿using AdminGui.ViewModels;
+using System.Net.Sockets;
 
 namespace AdminGui
 {
