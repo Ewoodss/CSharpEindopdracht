@@ -17,9 +17,7 @@ namespace Client
             actions = new Actions();
             TcpClient tcpClient = new TcpClient(address, 5001);
             this.connection = new Connection(tcpClient);
-
-
-
+            
             connection.actions = actions;
             
         }

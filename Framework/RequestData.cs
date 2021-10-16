@@ -5,6 +5,16 @@ namespace Framework
 {
     public class RequestData<TDataType>
     {
+        public RequestData()
+        {
+        }
+
+        public RequestData(string action, TDataType data)
+        {
+            Action = action;
+            Data = data;
+        }
+
         [JsonProperty] 
         public string Action { get; set; }
 

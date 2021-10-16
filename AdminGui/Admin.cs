@@ -12,7 +12,6 @@ namespace AdminGui
         private Connection connection;
         private ClientViewModel clientViewModel;
         private Actions actions;
-        private ClientsActions clientsActions;
 
         public Admin(ClientViewModel clientView, string address = "localhost")
         {
@@ -20,15 +19,21 @@ namespace AdminGui
             TcpClient tcpClient = new TcpClient(address, 5002);
             this.connection = new Connection(tcpClient);
             this.clientViewModel = clientView;
-            clientsActions= new ClientsActions(actions,connection);
+            ClientsActions clientsActions = new ClientsActions(actions,connection);
             this.connection.actions = actions;
         }
 
         public void Start()
         {
             connection.Start();
+            GetClients();
 
             Task.Delay(-1).Wait();
+        }
+
+        public void GetClients()
+        {
+            connection.SendString(JsonUtils.SerializeStringData(new RequestData<object>(action: "GetAllClients",data:""))).Wait();
         }
 
         //example

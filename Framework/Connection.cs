@@ -102,13 +102,13 @@ namespace Framework
         }
 
 
-        protected virtual void onResponse(byte type, byte[] data)
+        protected virtual async void onResponse(byte type, byte[] data)
         {
             if (type == 1)
             {
                 string textData = Encoding.UTF8.GetString(totalBuffer, 5, data.Length);
                 Console.WriteLine(textData);
-                actions.DoAction(textData, this);
+                await actions.DoAction(textData, this);
             }
         }
 
