@@ -8,7 +8,7 @@ using System.Net;
 
 namespace Server
 {
-    public class Server
+    public partial class Server
     {
         private string host;
         private int clientPort;
@@ -39,7 +39,7 @@ namespace Server
             Console.WriteLine($"Started listining for clients on {host}:{clientPort}");
 
             this.adminTcpListner.BeginAcceptTcpClient(new AsyncCallback(onAdminConnect), null);
-            Console.WriteLine($"Started listining for clients on {host}:{clientPort}");
+            Console.WriteLine($"Started listining for clients on {host}:{adminPort}");
         }
 
         private void onClientConnect(IAsyncResult ar)
@@ -48,24 +48,25 @@ namespace Server
 
             Console.WriteLine($"Client connected from {tcpClient.Client.RemoteEndPoint}");
 
-            ClientHandler connection = new ClientHandler(this, tcpClient);
+            ClientHandler connection = new ClientHandler(tcpClient,ConnectionsManager);
             connection.Start();
-            this.ConnectionsManager.AddConnection(connection);
+            this.ConnectionsManager.AddClientHandler(connection);
+
 
             this.clientTcpListner.BeginAcceptTcpClient(new AsyncCallback(onClientConnect), null);
         }
 
         private void onAdminConnect(IAsyncResult ar)
         {
-            TcpClient tcpClient = this.clientTcpListner.EndAcceptTcpClient(ar);
+            TcpClient tcpClient = this.adminTcpListner.EndAcceptTcpClient(ar);
 
             Console.WriteLine($"Client connected from {tcpClient.Client.RemoteEndPoint}");
 
-            AdminHandler connection = new AdminHandler(this, tcpClient);
+            AdminHandler connection = new AdminHandler(tcpClient,ConnectionsManager);
             connection.Start();
-            this.ConnectionsManager.AddConnection(connection);
+            this.ConnectionsManager.AddAdminHandler(connection);
 
-            this.clientTcpListner.BeginAcceptTcpClient(new AsyncCallback(onClientConnect), null);
+            this.adminTcpListner.BeginAcceptTcpClient(new AsyncCallback(onAdminConnect), null);
         }
 
     }
