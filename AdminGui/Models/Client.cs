@@ -13,10 +13,14 @@ namespace AdminGui.Models
         public string IPAdress { get; set; }
 
         private ObservableCollection<Process> processes;
+        private ObservableCollection<Software> softwares;
+        private bool isSelected = false;
 
         public Client()
         {
             this.processes = new ObservableCollection<Process>();
+            this.softwares = new ObservableCollection<Software>();
+            this.softwares.Add(new Software() { Name = "Luuk" });
         }
 
         public ObservableCollection<Process> Processes
@@ -28,6 +32,18 @@ namespace AdminGui.Models
                 NotifyPropertyChanged();
             }
         }
+
+        public ObservableCollection<Software> Softwares
+        {
+            get { return this.softwares; }
+            private set
+            {
+                this.softwares = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public bool IsSelected { get { return this.isSelected; } set { this.isSelected = value; } }
 
         public override bool Equals(object obj)
         {

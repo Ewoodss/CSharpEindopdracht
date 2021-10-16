@@ -1,9 +1,12 @@
 ﻿using AdminGui.Commands;
 using AdminGui.Models;
 using Framework;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+using System.Linq;
+using System.Windows.Controls;
 
 namespace AdminGui.ViewModels
 {
@@ -40,6 +43,11 @@ namespace AdminGui.ViewModels
             }
         }
 
+        public List<Software> GetSelectedCombinedSoftware
+        {
+            get { return this.clients.Clients.Where(x => x.IsSelected).SelectMany(x => x.Softwares).Distinct().ToList(); }
+        }
+
         private ICommand sleepCommand;
         public ICommand SleepCommand
         {
@@ -55,6 +63,28 @@ namespace AdminGui.ViewModels
                 }
                 return sleepCommand;
             }
+        }
+
+        private ICommand startSoftwareCommand;
+        public ICommand StartSoftwareCommand
+        {
+            get
+            {
+                if (startSoftwareCommand == null)
+                {
+                    startSoftwareCommand = new RelayCommand(x =>
+                    {
+                        MessageBox.Show("startSoftwareCommand");
+                    },
+                    x => true);
+                }
+                return startSoftwareCommand;
+            }
+        }
+
+        public void ClientList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.NotifyPropertyChanged("GetSelectedCombinedSoftware");
         }
     }
 }
