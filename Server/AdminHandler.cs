@@ -13,8 +13,8 @@ namespace Server
         public AdminHandler(TcpClient client, ConnectionsManager connectionsManager)
         {
             Actions actions = new Actions();
-            AdminActions adminActions = new AdminActions(actions, connectionsManager);
             this.connection = new ServerConnection(client, connectionsManager);
+            AdminActions adminActions = new AdminActions(actions,connection, connectionsManager);
             this.connection.actions = actions;
         }
         public void Start()

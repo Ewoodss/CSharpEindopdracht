@@ -38,14 +38,17 @@ namespace Framework
 
         public async Task DoAction(string textData, IConnection connection)
         {
-            RequestData<object> requestData = JsonUtils.deserializeStringData(textData);
+            RequestData<object> requestData = JsonUtils.DeserializeStringData(textData);
+
+            if (!this.actions.ContainsKey(requestData.Action))
+                return;
 
             ActionHandler<object> actionHandler = GetAction(requestData.Action);
             bool succes = actionHandler.Invoke( requestData);
 
             requestData.Status = succes ? "succes" : "failed";
             Console.WriteLine(requestData);
-            await connection.SendString(JsonUtils.serializeStringData(requestData));
+            await connection.SendString(JsonUtils.SerializeStringData(requestData));
         }
     }
 }

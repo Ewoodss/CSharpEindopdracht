@@ -30,20 +30,23 @@ namespace Server
             RequestData<object> requestData = new RequestData<object>();
             requestData.Action = "AddClient";
             requestData.Data = connection.GetRemoteIp();
-            
+
+            List<Task> tasks = new List<Task>();
+
             foreach (AdminHandler connectionsManagerAdminHandler in connectionsManager.AdminHandlers)
             {
-                connectionsManagerAdminHandler.connection.SendString(JsonUtils.serializeStringData(requestData));
+                Task sendString = connectionsManagerAdminHandler.connection.SendString(JsonUtils.SerializeStringData(requestData));
+                tasks.Add(sendString);
             }
 
-            
+            Task.WaitAll(tasks.ToArray());
         }
 
         public async Task GetCommands()
         {
             RequestData<object> testRequestData = new RequestData<object>();
             testRequestData.Action = "GetCommands";
-            string serializeObject = JsonUtils.serializeStringData(testRequestData);
+            string serializeObject = JsonUtils.SerializeStringData(testRequestData);
             Console.WriteLine("testing: " + serializeObject);
             await connection.SendString(serializeObject);
         }
