@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Framework;
 
@@ -26,7 +27,14 @@ namespace Client
         {
             connection.Start();
             //dit ziet er niet uit als de juiste plek voor dit.
-            PowerActions powerActions = new PowerActions(actions);
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                PowerActions powerActions = new PowerActions(actions);
+                TaskManagerActions taskManagerActions = new TaskManagerActions(actions,connection);
+                taskManagerActions.Test();
+                // Do something
+            }
+            
         }
 
 

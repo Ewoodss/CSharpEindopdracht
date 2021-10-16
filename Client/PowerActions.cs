@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
         private static extern bool ExitWindowsEx(int uFlags, int dwReason);
 
         [DllImport("Powrprof.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        public static extern bool SetSuspendState(bool hiberate, bool forceCritical, bool disableWakeEvent);
+        public static extern bool SetSuspendState(bool hibernate, bool forceCritical, bool disableWakeEvent);
 
 
         public PowerActions(Actions actions)
