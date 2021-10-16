@@ -33,7 +33,7 @@ namespace AdminGui
 
         public void GetClients()
         {
-            connection.SendString(JsonUtils.SerializeStringData(new RequestData<object>(action: "GetAllClients",data:""))).Wait();
+            connection.SendString(JsonUtils.SerializeStringData(new RequestData<object>(action: "GetAllClients",data:"heogaboega"))).Wait();
         }
 
         //example

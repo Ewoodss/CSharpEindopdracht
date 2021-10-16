@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Framework;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace AdminGui
 {
@@ -49,7 +51,15 @@ namespace AdminGui
 
         private bool AddClients(RequestData<dynamic> requestData)
         {
-            if (requestData.Data is List<string> clients) clients.ForEach(s1 => AddClient(s1));
+            JArray jArray = requestData.Data;
+            foreach (JToken jToken in jArray)
+            {
+                AddClient((string)jToken);
+                //hallo ik ben luuk
+            }
+
+            
+
             return true;
         }
 

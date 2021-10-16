@@ -38,10 +38,10 @@ namespace Framework
 
         public async Task DoAction(string textData, IConnection connection)
         {
-            if (!this.actions.ContainsKey(textData))
-                return;
-            
             RequestData<object> requestData = JsonUtils.DeserializeStringData(textData);
+
+            if (!this.actions.ContainsKey(requestData.Action))
+                return;
 
             ActionHandler<object> actionHandler = GetAction(requestData.Action);
             bool succes = actionHandler.Invoke( requestData);
