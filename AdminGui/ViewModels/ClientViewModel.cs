@@ -9,28 +9,19 @@ namespace AdminGui.ViewModels
 {
     public class ClientViewModel : ObservableObject
     {
-        private ObservableCollection<Client> clients;
+        private ClientList clients;
         private Client selectedClient = null;
 
         public ClientViewModel()
         {
             Process process = new Process() { Name = "Hallo", MemoryUsage = 10.2, PID = 10, SessionName = "Ewout", SessionNumber = 69 };
-            this.clients = new ObservableCollection<Client>()
-            {
-                new Client(){ IPAdress="Luuk", Processes = new ObservableCollection<Process>(){ process, process } },
-                new Client(){ IPAdress="Luuk", Processes = new ObservableCollection<Process>(){ process } },
-                new Client(){ IPAdress="Luuk" }
-            };
+            this.clients = new ClientList();
+            this.Clients.Add(new Client() { IPAdress = "Luuk", Processes = new ObservableCollection<Process>() { process, process } });
+            this.Clients.Add(new Client() { IPAdress = "Twan", Processes = new ObservableCollection<Process>() { process, process } });
+            this.Clients.Add(new Client() { IPAdress = "Ewout", Processes = new ObservableCollection<Process>() { process, process } });
         }
 
-        public ObservableCollection<Client> Clients
-        {
-            get { return this.clients; }
-            set {
-                this.clients = value;
-                NotifyPropertyChanged(); 
-            }
-        }
+        public ClientList Clients { get => clients; private set => clients = value; }
 
         public Client SelectedClient
         {

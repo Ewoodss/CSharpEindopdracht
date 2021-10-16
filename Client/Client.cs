@@ -29,9 +29,5 @@ namespace Client
             PowerActions powerActions = new PowerActions(actions);
         }
 
-
-
-
-
     }
 }

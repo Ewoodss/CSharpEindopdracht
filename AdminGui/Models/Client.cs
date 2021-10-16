@@ -28,5 +28,21 @@ namespace AdminGui.Models
                 NotifyPropertyChanged();
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Client client &&
+                   IPAdress == client.IPAdress;
+        }
+
+        public override string ToString()
+        {
+            return IPAdress;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(IPAdress);
+        }
     }
 }

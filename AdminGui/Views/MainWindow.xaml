@@ -23,9 +23,12 @@
                 <RibbonGroup>
                     <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Send message" KeyTip="Send Message"/>
                 </RibbonGroup>
+                <RibbonGroup x:Name="Programm" Header="Program"  >
+                    <RibbonComboBox ItemsSource="{Binding Clients.Clients, Mode=OneWay}"></RibbonComboBox>
+                </RibbonGroup>
             </RibbonTab>
         </Ribbon>
-        <ListView DockPanel.Dock="Left" Name="ClientList" ItemsSource="{Binding Clients, Mode=TwoWay}" SelectedItem="{Binding SelectedClient}">
+        <ListView DockPanel.Dock="Left" Name="ClientList" ItemsSource="{Binding Clients.Clients, Mode=OneWay}" SelectedItem="{Binding SelectedClient}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="IP adres" DisplayMemberBinding="{Binding IPAdress}" Width="100"></GridViewColumn>
