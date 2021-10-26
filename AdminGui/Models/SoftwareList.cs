@@ -85,11 +85,21 @@ namespace AdminGui.Models
 				switch (args.Action)
 				{
                     case NotifyCollectionChangedAction.Add:
-                        int offset = 0;
-                        foreach (Software item in args.NewItems)
+                        if (args.NewStartingIndex >= 0)
                         {
-                            this.Software.Insert(args.NewStartingIndex + offset, item);
-                            offset++;
+                            int offset = 0;
+                            foreach (Software item in args.NewItems)
+                            {
+                                this.Software.Insert(args.NewStartingIndex + offset, item);
+                                offset++;
+                            }
+                        }
+                        else
+                        {
+                            foreach (Software item in args.OldItems)
+                            {
+                                this.Software.Add(item);
+                            }
                         }
                         break;
                     case NotifyCollectionChangedAction.Remove:
