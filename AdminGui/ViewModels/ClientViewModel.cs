@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Linq;
 using System.Windows.Controls;
 using Framework.Models;
+using AdminGui.Views;
 
 namespace AdminGui.ViewModels
 {
@@ -16,13 +17,14 @@ namespace AdminGui.ViewModels
         private ClientList clients;
         private Client selectedClient = null;
 
-        public ClientViewModel()
+        public ClientViewModel(Admin admin)
         {
             Process process = new Process() { Name = "Hallo", MemoryUsage = 10.2, PID = 10, SessionName = "Ewout", SessionNumber = 69 };
             this.clients = new ClientList();
             this.Clients.Add(new Client() { IPAdress = "Luuk", Processes = new ObservableCollection<Process>() { process, process } });
             this.Clients.Add(new Client() { IPAdress = "Twan", Processes = new ObservableCollection<Process>() { process, process } });
             this.Clients.Add(new Client() { IPAdress = "Ewout", Processes = new ObservableCollection<Process>() { process, process } });
+            this.admin = admin;
         }
 
         public ClientList Clients { get => clients; private set => clients = value; }
@@ -49,6 +51,29 @@ namespace AdminGui.ViewModels
             get { return this.clients.Clients.Where(x => x.IsSelected).SelectMany(x => x.Softwares).Distinct().ToList(); }
         }
 
+        private ICommand chatCommand;
+        public ICommand ChatCommand
+        {
+            get
+            {
+                if(chatCommand == null)
+                {
+                    chatCommand = new RelayCommand(x =>
+                    {
+                        InputDialog inputDialog = new InputDialog("Please enter your name:", "John Doe");
+                        if (!inputDialog.ShowDialog().Value)
+                            return;
+                            
+
+                        List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+                        this.admin.SendChatMessage(selectedClients, inputDialog.Answer);
+                    },
+                    x => true);
+                }
+                return chatCommand;
+            }
+        }
+
         private ICommand sleepCommand;
         public ICommand SleepCommand
         {
@@ -67,6 +92,8 @@ namespace AdminGui.ViewModels
         }
 
         private ICommand startSoftwareCommand;
+        private readonly Admin admin;
+
         public ICommand StartSoftwareCommand
         {
             get

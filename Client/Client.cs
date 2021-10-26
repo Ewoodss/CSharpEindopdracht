@@ -29,12 +29,10 @@ namespace Client
             //dit ziet er niet uit als de juiste plek voor dit.
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                PowerActions powerActions = new PowerActions(actions);
-                TaskManagerActions taskManagerActions = new TaskManagerActions(actions,connection);
-                taskManagerActions.CurrentRunningProcesses();
-                // Do something
+                TaskManagerActions taskManagerActions = new TaskManagerActions(actions, connection);
             }
-            
+            PowerActions powerActions = new PowerActions(actions);
+            new ChatMessageActions(actions);
         }
 
     }
