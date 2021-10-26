@@ -16,9 +16,9 @@
                 <RibbonGroup x:Name="PowerActionsGroup" 
                                     Header="Power Actions">
                     <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Sleep" KeyTip="Sleep" Command="{Binding Path=SleepCommand}"/>
-                    <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Shutdown" KeyTip="Shutdown" />
-                    <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Lock" KeyTip="Lock" />
-                    <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Log out" KeyTip="Log out" />
+                    <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Shutdown" KeyTip="Shutdown" Command="{Binding Path=ShutdownCommand}"/>
+                    <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Lock" KeyTip="Lock" Command="{Binding Path=LockCommand}"/>
+                    <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Log out" KeyTip="Log out" Command="{Binding Path=LogOffCommand}"/>
                 </RibbonGroup>
                 <RibbonGroup>
                     <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Send message" KeyTip="Send Message" Command="{Binding Path=ChatCommand}"/>

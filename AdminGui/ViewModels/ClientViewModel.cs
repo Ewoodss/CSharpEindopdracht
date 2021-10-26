@@ -84,13 +84,66 @@ namespace AdminGui.ViewModels
                 {
                     sleepCommand = new RelayCommand(x => 
                     {
-                        MessageBox.Show("Hallo");
+                        List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+                        this.admin.SendSleep(selectedClients);
                     }, 
                     x => true);
                 }
                 return sleepCommand;
             }
         }
+
+        private ICommand lockCommand;
+        public ICommand LockCommand
+        {
+            get
+            {
+                if(lockCommand == null)
+                {
+                    lockCommand = new RelayCommand(x => 
+                    {
+                        List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+                        this.admin.SendLock(selectedClients);
+                    }, x => true);
+                }
+                return lockCommand;
+            }
+        }
+
+        private ICommand shutDownCommand;
+        public ICommand ShutdownCommand
+        {
+            get 
+            {
+                if(shutDownCommand == null)
+                {
+                    shutDownCommand = new RelayCommand(x => 
+                    {
+                        List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+                        this.admin.SendShutdown(selectedClients);
+                    }, x => true);
+                }
+                return shutDownCommand;
+            }
+        }
+
+        private ICommand logOffCommand;
+        public ICommand LogOffCommand
+        {
+            get
+            {
+                if (logOffCommand == null)
+                {
+                    logOffCommand = new RelayCommand(x =>
+                    {
+                        List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+                        this.admin.SendLogOff(selectedClients);
+                    }, x => true);
+                }
+                return logOffCommand;
+            }
+        }
+
 
         private ICommand startSoftwareCommand;
 
