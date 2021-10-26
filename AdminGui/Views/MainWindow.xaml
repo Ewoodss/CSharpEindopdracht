@@ -20,10 +20,12 @@
                     <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Lock" KeyTip="Lock" Command="{Binding Path=LockCommand}"/>
                     <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Log out" KeyTip="Log out" Command="{Binding Path=LogOffCommand}"/>
                 </RibbonGroup>
+                <RibbonGroup x:Name="Programm" Header="Program" >
+                    <RibbonComboBox ItemsSource="{Binding SelectedClient.Softwares.Software, Mode=OneWay}" Width="150" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="100"></RibbonComboBox>
+                    <RibbonButton Label="Start" Command="{Binding Path=StartSoftwareCommand}"  LargeImageSource="/Images/Sleep.png"/>
+                </RibbonGroup>
                 <RibbonGroup>
                     <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Send message" KeyTip="Send Message" Command="{Binding Path=ChatCommand}"/>
-                </RibbonGroup>
-                <RibbonGroup Header="Export">
                     <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Export" KeyTip="Export" Command="{Binding Path=ExportCommand}"/>
                 </RibbonGroup>
             </RibbonTab>
@@ -41,6 +43,13 @@
             </ListView.ItemContainerStyle>
         </ListView>
         <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding SelectedClient.Processes.Processes, Mode=OneWay}">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Kill"
+            Command="{Binding KillProcessCommand}"
+            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
+                </ContextMenu>
+            </ListView.ContextMenu>
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Naam" Width="100" DisplayMemberBinding="{Binding Name}"></GridViewColumn>

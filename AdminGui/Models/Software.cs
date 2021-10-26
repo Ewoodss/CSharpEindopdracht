@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Framework;
+using System;
 
 namespace AdminGui.Models
 {
-    public class Software
+    public class Software : ObservableObject
     {
         public string Name { get; set; }
 

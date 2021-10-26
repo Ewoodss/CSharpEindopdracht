@@ -18,6 +18,7 @@ namespace AdminGui.ViewModels
     {
         private ClientList clients;
         private Client selectedClient = null;
+        private Software selectedSoftware = null;
         private readonly Admin admin;
 
         public ClientViewModel(Admin admin)
@@ -45,9 +46,26 @@ namespace AdminGui.ViewModels
             }
         }
 
+        public Software SelectedSoftware
+        {
+            get { return this.selectedSoftware; }
+            set
+            {
+                if(!Equals(this.selectedSoftware, value))
+                {
+                    if (this.selectedSoftware == null)
+                    {
+                        this.selectedSoftware = new Software();
+                    }
+                    this.selectedSoftware = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         public List<Software> GetSelectedCombinedSoftware
         {
-            get { return this.clients.Clients.Where(x => x.IsSelected).SelectMany(x => x.Softwares).Distinct().ToList(); }
+            get { return this.clients.Clients.Where(x => x.IsSelected).Select(x => x.Softwares).SelectMany(x => x.Software).Distinct().ToList(); }
         }
 
         private ICommand chatCommand;
@@ -166,7 +184,7 @@ namespace AdminGui.ViewModels
         {
             get
             {
-                if(exportCommand == null)
+                if (exportCommand == null)
                 {
                     exportCommand = new RelayCommand(x =>
                     {
@@ -184,11 +202,29 @@ namespace AdminGui.ViewModels
             }
         }
 
+        private ICommand killProcessCommand;
+        public ICommand KillProcessCommand
+        {
+            get
+            {
+                if (killProcessCommand == null)
+                {
+                    killProcessCommand = new RelayCommand(x =>
+                    {
+                        this.admin.KillProcess(this.SelectedClient, (x as Process));
+                    },
+                    x => true);
+                }
+                return killProcessCommand;
+            }
+        }
+
         public void ClientList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.NotifyPropertyChanged("GetSelectedCombinedSoftware");
             List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
             this.admin.GetProcceses(selectedClients);
+            this.admin.GetSoftware(selectedClients);
+            this.NotifyPropertyChanged("GetSelectedCombinedSoftware");
         }
     }
 }

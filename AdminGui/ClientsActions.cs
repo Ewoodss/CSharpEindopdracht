@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using AdminGui.Models;
+using Contracts;
 using Framework;
 using Framework.Models;
 using Newtonsoft.Json.Linq;
@@ -19,7 +20,32 @@ namespace AdminGui
             actions.AddAction("AddClients", AddClients);
             actions.AddAction("RemoveClient", RemoveClient);
             actions.AddAction("AddRunningProcesses", AddRunningProcesses);
+            actions.AddAction("List software", ListSoftware);
             this.clientViewModel = clientViewModel;
+        }
+
+        private bool ListSoftware(RequestData<object> request)
+        {
+            List<SoftwareRequestItem> softwareResult = null;
+
+            if (request is { Data: JArray dataObject })
+            {
+                softwareResult = dataObject.ToObject<List<SoftwareRequestItem>>();
+            }
+            else
+            {
+                return false;
+            }
+
+            SoftwareList softwares = this.clientViewModel.Clients.Clients.Last().Softwares;
+            softwares.Clear();
+
+            foreach (SoftwareRequestItem software in softwareResult)
+            {
+                softwares.Add(new Software() { Name = software.Name});
+            }
+
+            return softwares.Software.Count > 1;
         }
 
         private bool AddRunningProcesses(RequestData<object> request)
