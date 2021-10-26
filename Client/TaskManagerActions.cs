@@ -12,8 +12,11 @@ namespace Client
 #pragma warning disable CA1416 // Validate platform compatibility
     public class TaskManagerActions
     {
+        private readonly string localIp;
+
         public TaskManagerActions(Actions actions, Connection connection)
         {
+            localIp = connection.GetLocalIp();
             actions.AddAction("GetTotalCpuUsage", GetTotalCpuUsage);
             actions.AddAction("GetTotalMemoryUsage", GetTotalMemoryUsage);
             actions.AddAction("GetTotalDiskUsage", GetTotalDiskUsage);
@@ -25,6 +28,7 @@ namespace Client
         {
             List<Framework.Models.Process> currentRunningProcesses = CurrentRunningProcesses();
             request.Data = currentRunningProcesses;
+            request.Origin = localIp;
             return currentRunningProcesses.Count > 1;
         }
 
@@ -32,6 +36,7 @@ namespace Client
         {
             float usage = CurrentCpuTotalUsage();
             request.Data = usage;
+            request.Origin = localIp;
             return usage > 0.0f;
         }
 
@@ -39,6 +44,7 @@ namespace Client
         {
             float usage = CurrentMemoryTotalUsage();
             request.Data = usage;
+            request.Origin = localIp;
             return usage > 0.0f;
         }
 
@@ -46,6 +52,7 @@ namespace Client
         {
             float usage = CurrentDiskTotalUsage();
             request.Data = usage;
+            request.Origin = localIp;
             return usage > 0.0f;
         }
 
@@ -55,6 +62,7 @@ namespace Client
             task.Wait();
             float usage = task.Result;
             request.Data = usage;
+            request.Origin = localIp;
             return usage > 0.0f;
         }
 

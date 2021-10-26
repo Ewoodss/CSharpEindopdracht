@@ -32,7 +32,7 @@ namespace AdminGui.ViewModels
             get { return this.selectedClient; }
             set
             {
-                if (this.selectedClient != value)
+                if (!Equals(this.selectedClient, value))
                 {
                     if (this.selectedClient == null)
                     {

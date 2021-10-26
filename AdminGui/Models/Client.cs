@@ -24,6 +24,7 @@ namespace AdminGui.Models
             this.softwares.Add(new Software() { Name = "Luuk" });
         }
 
+
         public ObservableCollection<Process> Processes
         {
             get { return this.processes; }

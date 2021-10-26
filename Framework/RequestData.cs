@@ -15,13 +15,12 @@ namespace Framework
             Data = data;
         }
 
-        [JsonProperty] 
-        public string Action { get; set; }
+        [JsonProperty] public string Action { get; set; }
 
-        [JsonProperty]
-        public string Status { get; set; }
-        [JsonProperty]
-        public TDataType Data { get; set; }
+        [JsonProperty] public string Status { get; set; }
+        [JsonProperty] public TDataType Data { get; set; }
+
+        [JsonProperty] public string Origin { get; set; }
 
 
 
