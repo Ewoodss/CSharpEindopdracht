@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Documents;
 using AdminGui.Models;
 using Framework;
-using AdminGui.Models;
 using Contracts;
-using System.Linq;
 
 namespace AdminGui
 {
