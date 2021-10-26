@@ -20,7 +20,7 @@ namespace AdminGui
             TcpClient tcpClient = new TcpClient(address, 5002);
             this.connection = new Connection(tcpClient);
             this.clientViewModel = clientView;
-            ClientsActions clientsActions = new ClientsActions(actions,connection);
+            ClientsActions clientsActions = new ClientsActions(actions, clientViewModel);
             this.connection.actions = actions;
         }
 

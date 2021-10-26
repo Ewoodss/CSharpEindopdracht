@@ -8,15 +8,16 @@ namespace AdminGui
 {
     public class ClientsActions
     {
-        private Connection connection;
+        private ViewModels.ClientViewModel clientViewModel;
         private List<string> clientIps;
 
-        public ClientsActions(Actions actions, Connection connection)
+        public ClientsActions(Actions actions, ViewModels.ClientViewModel clientViewModel)
         {
             clientIps = new List<string>();
             actions.AddAction("AddClient", AddClient);
             actions.AddAction("AddClients", AddClients);
             actions.AddAction("RemoveClient", RemoveClient);
+            this.clientViewModel = clientViewModel;
         }
 
         private bool AddClient(string clientIp)
@@ -27,6 +28,7 @@ namespace AdminGui
             }
 
             clientIps.Add(clientIp);
+            this.clientViewModel.Clients.Add(clientIp);
             return true;
         }
 
@@ -45,6 +47,7 @@ namespace AdminGui
             }
 
             clientIps.Remove(clientIp);
+            this.clientViewModel.Clients.Remove(clientIp);
             return true;
         }
 
@@ -55,7 +58,6 @@ namespace AdminGui
             foreach (JToken jToken in jArray)
             {
                 AddClient((string)jToken);
-                //hallo ik ben luuk
             }
 
             
