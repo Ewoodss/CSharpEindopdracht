@@ -96,7 +96,7 @@ namespace AdminGui.Models
                         }
                         else
                         {
-                            foreach (Software item in args.OldItems)
+                            foreach (Software item in args.NewItems)
                             {
                                 this.Software.Add(item);
                             }

@@ -109,7 +109,7 @@ namespace AdminGui.Models
                         }
                         else
                         {
-                            foreach (Client item in args.OldItems)
+                            foreach (Client item in args.NewItems)
                             {
                                 this.Clients.Add(item);
                             }

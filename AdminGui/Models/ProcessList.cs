@@ -96,7 +96,7 @@ namespace AdminGui.Models
                         }
                         else
                         {
-                            foreach (Process item in args.OldItems)
+                            foreach (Process item in args.NewItems)
                             {
                                 this.Processes.Add(item);
                             }
