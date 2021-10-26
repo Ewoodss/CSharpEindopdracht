@@ -9,6 +9,8 @@ using System.Linq;
 using System.Windows.Controls;
 using Framework.Models;
 using AdminGui.Views;
+using Microsoft.Win32;
+using System.IO;
 
 namespace AdminGui.ViewModels
 {
@@ -20,11 +22,7 @@ namespace AdminGui.ViewModels
 
         public ClientViewModel(Admin admin)
         {
-            Process process = new Process() { Name = "Hallo", MemoryUsage = 10.2, PID = 10, SessionName = "Ewout", SessionNumber = 69 };
             this.clients = new ClientList();
-            // this.Clients.Add(new Client() { IPAdress = "Luuk", Processes = new ObservableCollection<Process>() { process, process } });
-            // this.Clients.Add(new Client() { IPAdress = "Twan", Processes = new ObservableCollection<Process>() { process, process } });
-            // this.Clients.Add(new Client() { IPAdress = "Ewout", Processes = new ObservableCollection<Process>() { process, process } });
             this.admin = admin;
         }
 
@@ -160,6 +158,29 @@ namespace AdminGui.ViewModels
                     x => true);
                 }
                 return startSoftwareCommand;
+            }
+        }
+
+        private ICommand exportCommand;
+        public ICommand ExportCommand
+        {
+            get
+            {
+                if(exportCommand == null)
+                {
+                    exportCommand = new RelayCommand(x =>
+                    {
+                        SaveFileDialog saveFileDialog = new SaveFileDialog();
+                        saveFileDialog.Filter = "Csv file (*.csv)|*.csv";
+                        if (!saveFileDialog.ShowDialog().Value)
+                            return;
+
+                        string csvValue = AdminGui.Parsers.ProcessListToCSV.Parse(this.selectedClient.Processes);
+                        File.WriteAllText(saveFileDialog.FileName, csvValue);
+                    },
+                    x => true);
+                }
+                return exportCommand;
             }
         }
 
