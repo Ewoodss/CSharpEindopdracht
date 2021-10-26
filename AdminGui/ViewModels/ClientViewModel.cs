@@ -26,6 +26,7 @@ namespace AdminGui.ViewModels
             // this.Clients.Add(new Client() { IPAdress = "Twan", Processes = new ObservableCollection<Process>() { process, process } });
             // this.Clients.Add(new Client() { IPAdress = "Ewout", Processes = new ObservableCollection<Process>() { process, process } });
             this.admin = admin;
+           
         }
 
         public ClientList Clients { get => clients; private set => clients = value; }
