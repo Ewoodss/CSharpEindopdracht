@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using AdminGui.Models;
 using Framework;
-using Newtonsoft.Json;
+using Framework.Models;
 using Newtonsoft.Json.Linq;
 
 namespace AdminGui
@@ -15,7 +18,32 @@ namespace AdminGui
             actions.AddAction("AddClient", AddClient);
             actions.AddAction("AddClients", AddClients);
             actions.AddAction("RemoveClient", RemoveClient);
+            actions.AddAction("AddRunningProcesses", AddRunningProcesses);
             this.clientViewModel = clientViewModel;
+        }
+
+        private bool AddRunningProcesses(RequestData<object> request)
+        {
+            Console.WriteLine();
+            ProcessList clientProcesses = clientViewModel.Clients.Clients.Last().Processes;
+            clientProcesses.Clear();
+            
+            List<Process> processes = null;
+
+            if (request is { Data: JArray dataObject })
+            {
+                processes = dataObject.ToObject<List<Process>>();
+            }
+
+            if (processes == null)
+            {
+                var test = request.Data.GetType().ToString();
+                return false;
+            }
+
+            processes.ForEach(clientProcesses.Add);
+
+            return clientProcesses.Processes.Count > 1;
         }
 
         private bool AddClient(string clientIp)

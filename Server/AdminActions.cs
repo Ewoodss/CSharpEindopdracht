@@ -35,22 +35,21 @@ namespace Server
                 return false;
             }
 
+            requestDataForClient.Origin = connection.GetRemoteIp();
             List<ClientHandler> ClientHandlers = connectionsManager.ClientHandlers;
 
-            // foreach (var clientHandler in clientIps.SelectMany(ip => ClientHandlers.Where(clientHandler => clientHandler.connection.GetIp().Equals(ip))))
-            // {
-            //     clientHandler.connection.SendString(JsonUtils.serializeStringData(requestDataForClient));
-            // }
-
-            foreach (ClientHandler clientHandler in ClientHandlers)
+            foreach (var clientHandler in clientIps.SelectMany(ip => ClientHandlers.Where(clientHandler => clientHandler.connection.GetRemoteIp().Equals(ip))))
             {
-                string serializeStringData = JsonUtils.SerializeStringData(requestDataForClient);
-                Console.WriteLine(serializeStringData);
-                clientHandler.connection.SendString(serializeStringData).Wait();
+                clientHandler.connection.SendString(JsonUtils.SerializeStringData(requestDataForClient));
             }
-            
+
             return true;
         }
+
+        
+
+
+
 
         private bool GetAllClients(RequestData<dynamic> notNeeded)
         {

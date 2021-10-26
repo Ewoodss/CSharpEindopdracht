@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Framework.Models;
 
 namespace AdminGui.Models
 {
@@ -12,25 +13,21 @@ namespace AdminGui.Models
     {
         public string IPAdress { get; set; }
 
-        private ObservableCollection<Process> processes;
+        private ProcessList processes;
         private ObservableCollection<Software> softwares;
         private bool isSelected = false;
 
         public Client()
         {
-            this.processes = new ObservableCollection<Process>();
+            this.processes = new ProcessList();
             this.softwares = new ObservableCollection<Software>();
             this.softwares.Add(new Software() { Name = "Luuk" });
         }
 
-        public ObservableCollection<Process> Processes
+
+        public ProcessList Processes
         {
             get { return this.processes; }
-            set
-            {
-                this.processes = value;
-                NotifyPropertyChanged();
-            }
         }
 
         public ObservableCollection<Software> Softwares

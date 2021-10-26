@@ -41,7 +41,7 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding SelectedClient.Processes, Mode=TwoWay}">
+        <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding SelectedClient.Processes.Processes, Mode=OneWay}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Naam" Width="100" DisplayMemberBinding="{Binding Name}"></GridViewColumn>
