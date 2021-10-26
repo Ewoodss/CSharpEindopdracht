@@ -31,7 +31,7 @@ namespace Client
             {
                 PowerActions powerActions = new PowerActions(actions);
                 TaskManagerActions taskManagerActions = new TaskManagerActions(actions,connection);
-                taskManagerActions.Test();
+                taskManagerActions.CurrentRunningProcesses();
                 // Do something
             }
             

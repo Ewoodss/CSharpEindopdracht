@@ -4,6 +4,7 @@ using Framework;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+using Framework.Models;
 
 namespace AdminGui.ViewModels
 {

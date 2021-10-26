@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading;
 using System.Threading.Tasks;
 using Framework;
@@ -14,73 +15,134 @@ namespace Client
         public TaskManagerActions(Actions actions, Connection connection)
         {
             actions.AddAction("GetTotalCpuUsage", GetTotalCpuUsage);
+            actions.AddAction("GetTotalMemoryUsage", GetTotalMemoryUsage);
+            actions.AddAction("GetTotalDiskUsage", GetTotalDiskUsage);
+            actions.AddAction("GetTotalGpuUsage", GetTotalGpuUsage);
+            actions.AddAction("GetRunningProcesses", GetRunningProcesses);
         }
 
-        async Task<double> GetCpuLoadAsync(Process process)
+        private bool GetRunningProcesses(RequestData<dynamic> request)
         {
-            TimeSpan startCpuTime = process.TotalProcessorTime;
-            Stopwatch timer = Stopwatch.StartNew();
-
-            await Task.Delay(100);
-
-            TimeSpan endCpuTime = process.TotalProcessorTime;
-            timer.Stop();
-
-            return (endCpuTime - startCpuTime).TotalMilliseconds /
-                   (Environment.ProcessorCount * timer.ElapsedMilliseconds);
+            List<Framework.Models.Process> currentRunningProcesses = CurrentRunningProcesses();
+            request.Data = currentRunningProcesses;
+            return currentRunningProcesses.Count > 1;
         }
-
-        public List<string> Test()
-        {
-            PerformanceCounter mem = new PerformanceCounter
-            {
-                CategoryName = "Process",
-                CounterName = "Working Set - Private",
-                ReadOnly = true
-            };
-            PerformanceCounter cpu = new PerformanceCounter
-            {
-                CategoryName = "Process",
-                CounterName = "% Processor Time",
-                ReadOnly = true
-            };
-            List<string> henk = new List<string>();
-
-            foreach (Process process in Process.GetProcesses())
-            {
-                string processProcessName = process.ProcessName;
-
-                mem.InstanceName = processProcessName;
-                cpu.InstanceName = processProcessName;
-
-                dynamic task = new ExpandoObject();
-                task.cpuUsages = cpu.NextValue() / Environment.ProcessorCount;
-                task.memsize =mem.NextValue()/ 1048576;
-                task.name = processProcessName;
-                henk.Add(processProcessName+" "+task.cpuUsages + " " + task.memsize);
-
-            }
-
-            
-            mem.Close();
-            mem.Dispose();
-            return henk;
-        }
-
 
         private bool GetTotalCpuUsage(RequestData<dynamic> request)
         {
-            float currentCpuTotalUsage = CurrentCpuTotalUsage();
-            request.Data = currentCpuTotalUsage;
-            return currentCpuTotalUsage > 0.0f;
+            float usage = CurrentCpuTotalUsage();
+            request.Data = usage;
+            return usage > 0.0f;
         }
 
-
-        private float CurrentCpuTotalUsage()
+        private bool GetTotalMemoryUsage(RequestData<dynamic> request)
         {
-            using PerformanceCounter cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-            return cpuCounter.NextValue();
+            float usage = CurrentMemoryTotalUsage();
+            request.Data = usage;
+            return usage > 0.0f;
+        }
+
+        private bool GetTotalDiskUsage(RequestData<dynamic> request)
+        {
+            float usage = CurrentDiskTotalUsage();
+            request.Data = usage;
+            return usage > 0.0f;
+        }
+
+        private bool GetTotalGpuUsage(RequestData<dynamic> request)
+        {
+            Task<float> task = CurrentGpuTotalUsage();
+            task.Wait();
+            float usage = task.Result;
+            request.Data = usage;
+            return usage > 0.0f;
+        }
+
+        public List<Framework.Models.Process> CurrentRunningProcesses()
+        {
+            List<Framework.Models.Process> processesList = new List<Framework.Models.Process>();
+            Process[] processes = Process.GetProcesses();
+            foreach (Process process in processes)
+            {
+                Framework.Models.Process modelProcess = new Framework.Models.Process();
+                modelProcess.Name = process.MainWindowTitle;
+                modelProcess.MemoryUsage = process.WorkingSet64;
+                modelProcess.PID = process.Id;
+                if (modelProcess.Name.Length < 1)
+                {
+                    modelProcess.Name = process.ProcessName;
+                }
+
+                modelProcess.SessionName = process.ProcessName;
+                modelProcess.SessionNumber = process.SessionId;
+                processesList.Add(modelProcess);
+            }
+
+            return processesList;
+        }
+
+        static async Task<float> CurrentGpuTotalUsage()
+        {
+            try
+            {
+                var category = new PerformanceCounterCategory("GPU Engine");
+                var counterNames = category.GetInstanceNames();
+                var gpuCounters = new List<PerformanceCounter>();
+                var result = 0f;
+
+                foreach (string counterName in counterNames)
+                {
+                    if (counterName.EndsWith("engtype_3D"))
+                    {
+                        foreach (PerformanceCounter counter in category.GetCounters(counterName))
+                        {
+                            if (counter.CounterName == "Utilization Percentage")
+                            {
+                                gpuCounters.Add(counter);
+                            }
+                        }
+                    }
+                }
+
+                gpuCounters.ForEach(x => { _ = x.NextValue(); });
+
+                await Task.Delay(1000);
+
+                gpuCounters.ForEach(x => { result += x.NextValue(); });
+
+                return result;
+            }
+            catch
+            {
+                return 0f;
+            }
+        }
+
+        static readonly PerformanceCounter
+            DiskCounter = new PerformanceCounter("PhysicalDisk", "% Disk Time", "_Total");
+
+        private static float CurrentDiskTotalUsage()
+        {
+            return DiskCounter.NextValue();
+        }
+
+        static readonly PerformanceCounter CpuCounter =
+            new PerformanceCounter("Processor", "% Processor Time", "_Total");
+
+        private static float CurrentCpuTotalUsage()
+        {
+            return CpuCounter.NextValue();
+        }
+
+        static readonly PerformanceCounter MemCounter =
+            new PerformanceCounter("Memory", "% Committed Bytes In Use", null);
+
+        private static float CurrentMemoryTotalUsage()
+        {
+            return MemCounter.NextValue();
         }
     }
+
+
 #pragma warning restore CA1416 // Validate platform compatibility
 }
