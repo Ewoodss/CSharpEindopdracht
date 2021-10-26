@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdminGui.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,11 @@ namespace AdminGui.Views
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void ClientList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ((ClientViewModel)this.DataContext).ClientList_SelectionChanged(sender, e);
         }
     }
 }

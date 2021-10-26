@@ -23,14 +23,23 @@
                 <RibbonGroup>
                     <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Send message" KeyTip="Send Message"/>
                 </RibbonGroup>
+                <RibbonGroup x:Name="Programm" Header="Program" VerticalAlignment="Stretch"  >
+                    <RibbonComboBox ItemsSource="{Binding GetSelectedCombinedSoftware, Mode=OneWay}"></RibbonComboBox>
+                    <RibbonButton Label="Start" Command="{Binding Path=StartSoftwareCommand}"  LargeImageSource="/Images/Sleep.png"/>
+                </RibbonGroup>
             </RibbonTab>
         </Ribbon>
-        <ListView DockPanel.Dock="Left" Name="ClientList" ItemsSource="{Binding Clients, Mode=TwoWay}" SelectedItem="{Binding SelectedClient}">
+        <ListView DockPanel.Dock="Left" Name="ClientList" ItemsSource="{Binding Clients.Clients, Mode=OneWay}" SelectedItem="{Binding SelectedClient}" SelectionChanged="ClientList_SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="IP adres" DisplayMemberBinding="{Binding IPAdress}" Width="100"></GridViewColumn>
                 </GridView>
             </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected}"></Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
         <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding SelectedClient.Processes, Mode=TwoWay}">
             <ListView.View>
