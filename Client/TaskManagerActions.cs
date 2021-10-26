@@ -26,9 +26,17 @@ namespace Client
 
         private bool GetRunningProcesses(RequestData<dynamic> request)
         {
+            RequestData<dynamic> responseData = new RequestData<dynamic>();
             List<Framework.Models.Process> currentRunningProcesses = CurrentRunningProcesses();
-            request.Data = currentRunningProcesses;
+            responseData.Action = "AddRunningProcesses";
+            responseData.Data = currentRunningProcesses;
+            responseData.Origin = localIp;
+            
+            (string, RequestData<dynamic>) data = (request.Origin, responseData);
+            request.Action = "SendToAdmin";
+            request.Data = data;
             request.Origin = localIp;
+
             return currentRunningProcesses.Count > 1;
         }
 

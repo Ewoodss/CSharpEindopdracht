@@ -17,6 +17,9 @@ namespace Server
         {
             this.connectionsManager = connectionsManager;
             this.connection = new ServerConnection(client, connectionsManager);
+            Actions actions = new Actions();
+            this.connection.actions = actions;
+            new ClientActions(actions,connection,connectionsManager);
         }
         public void Start()
         {
@@ -42,15 +45,6 @@ namespace Server
             Task.WaitAll(tasks.ToArray());
         }
 
-        public async Task GetCommands()
-        {
-            RequestData<object> testRequestData = new RequestData<object>();
-            testRequestData.Action = "GetCommands";
-            string serializeObject = JsonUtils.SerializeStringData(testRequestData);
-            Console.WriteLine("testing: " + serializeObject);
-            await connection.SendString(serializeObject);
-        }
 
-        
     }
 }

@@ -16,14 +16,15 @@ namespace AdminGui.ViewModels
     {
         private ClientList clients;
         private Client selectedClient = null;
+        private readonly Admin admin;
 
         public ClientViewModel(Admin admin)
         {
             Process process = new Process() { Name = "Hallo", MemoryUsage = 10.2, PID = 10, SessionName = "Ewout", SessionNumber = 69 };
             this.clients = new ClientList();
-            this.Clients.Add(new Client() { IPAdress = "Luuk", Processes = new ObservableCollection<Process>() { process, process } });
-            this.Clients.Add(new Client() { IPAdress = "Twan", Processes = new ObservableCollection<Process>() { process, process } });
-            this.Clients.Add(new Client() { IPAdress = "Ewout", Processes = new ObservableCollection<Process>() { process, process } });
+            // this.Clients.Add(new Client() { IPAdress = "Luuk", Processes = new ObservableCollection<Process>() { process, process } });
+            // this.Clients.Add(new Client() { IPAdress = "Twan", Processes = new ObservableCollection<Process>() { process, process } });
+            // this.Clients.Add(new Client() { IPAdress = "Ewout", Processes = new ObservableCollection<Process>() { process, process } });
             this.admin = admin;
         }
 
@@ -92,7 +93,6 @@ namespace AdminGui.ViewModels
         }
 
         private ICommand startSoftwareCommand;
-        private readonly Admin admin;
 
         public ICommand StartSoftwareCommand
         {
@@ -113,6 +113,8 @@ namespace AdminGui.ViewModels
         public void ClientList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.NotifyPropertyChanged("GetSelectedCombinedSoftware");
+            List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+            this.admin.GetProcceses(selectedClients);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Framework
         public Actions()
         {
             actions = new Dictionary<string, ActionHandler<dynamic>>();
-            
+
             actions.Add("GetActions", (response) =>
             {
                 response.Data = GetActions();
@@ -44,7 +44,9 @@ namespace Framework
                 return;
 
             ActionHandler<object> actionHandler = GetAction(requestData.Action);
-            bool succes = actionHandler.Invoke( requestData);
+
+            bool succes = actionHandler.Invoke(requestData);
+
 
             requestData.Status = succes ? "succes" : "failed";
             Console.WriteLine(requestData);

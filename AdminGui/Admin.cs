@@ -25,8 +25,6 @@ namespace AdminGui
         public void Start()
         {
             GetClients();
-            Task.Delay(1000).Wait();
-            GetProcceses();
             Task.Delay(-1).Wait();
         }
 
@@ -35,25 +33,14 @@ namespace AdminGui
             connection.SendString(JsonUtils.SerializeStringData(new RequestData<object>(action: "GetAllClients",data:"heogaboega"))).Wait();
         }
 
-        public void GetProcceses()
+        public async void GetProcceses(List<Client> clients)
         {
-            List<string> list = clientViewModel.Clients.Clients.Select(x => x.IPAdress).Distinct().ToList();
             RequestData<dynamic> requestData = new RequestData<dynamic>();
             requestData.Action = "GetRunningProcesses";
-            SendToClients(list, requestData).Wait();
+            await SendToClients(clients, requestData);
         }
 
 
-        public async Task SendToClients(List<string> clients, RequestData<dynamic> requestData)
-        {
-            (List<string>, RequestData<dynamic>) data = (clients, requestData);
-            RequestData<object> testRequestData = new RequestData<object>();
-            testRequestData.Action = "SendToClients";
-            testRequestData.Data = data;
-            string serializeObject = JsonUtils.SerializeStringData(testRequestData);
-            //Console.WriteLine("testing: " + serializeObject);
-            await connection.SendString(serializeObject);
-        }
 
         public async void SendChatMessage(List<Client> clients, string message)
         {
@@ -65,10 +52,10 @@ namespace AdminGui
                     Message = message
                 }
             };
-            await this.sendToClients(clients, data);
+            await this.SendToClients(clients, data);
         }
 
-        private async Task sendToClients<TData>(List<Client> clients, RequestData<TData> requestData)
+        private async Task SendToClients<TData>(List<Client> clients, RequestData<TData> requestData)
         {
             List<string> clientList = clients.Select(x => x.IPAdress).ToList();
             (List<string>, RequestData<TData>) data = (clientList, requestData);
