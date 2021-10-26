@@ -5,28 +5,23 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using Framework;
+using AdminGui.Models;
+using Contracts;
+using System.Linq;
 
 namespace AdminGui
 {
     public class Admin
     {
         private Connection connection;
-        private ClientViewModel clientViewModel;
-        private Actions actions;
 
-        public Admin(ClientViewModel clientView, string address = "localhost")
+        public Admin(Connection connection)
         {
-            actions = new Actions();
-            TcpClient tcpClient = new TcpClient(address, 5002);
-            this.connection = new Connection(tcpClient);
-            this.clientViewModel = clientView;
-            ClientsActions clientsActions = new ClientsActions(actions, clientViewModel);
-            this.connection.actions = actions;
+            this.connection = connection;
         }
 
         public void Start()
         {
-            connection.Start();
             GetClients();
 
             Task.Delay(-1).Wait();
@@ -37,18 +32,29 @@ namespace AdminGui
             connection.SendString(JsonUtils.SerializeStringData(new RequestData<object>(action: "GetAllClients",data:"heogaboega"))).Wait();
         }
 
-        //example
-        // public void test()
-        // {
-        //     List<string> list = new List<string>();
-        //     RequestData<dynamic> requestData = new RequestData<dynamic>();
-        //     requestData.Action = "Lock";
-        //     sendToClients(list, requestData).Wait();
-        // }
+        public async void SendChatMessage(List<Client> clients, string message)
+        {
+            RequestData<ChatMessageCommand> data = new RequestData<ChatMessageCommand>()
+            {
+                Action = "Chat",
+                Data = new ChatMessageCommand()
+                {
+                    Message = message
+                }
+            };
+            await this.sendToClients(clients, data);
+        }
 
-
-        
-
-
+        private async Task sendToClients<TData>(List<Client> clients, RequestData<TData> requestData)
+        {
+            List<string> clientList = clients.Select(x => x.IPAdress).ToList();
+            (List<string>, RequestData<TData>) data = (clientList, requestData);
+            RequestData<object> testRequestData = new RequestData<object>();
+            testRequestData.Action = "SendToClients";
+            testRequestData.Data = data;
+            string serializeObject = JsonUtils.SerializeStringData(testRequestData);
+            //Console.WriteLine("testing: " + serializeObject);
+            await connection.SendString(serializeObject);
+        }
     }
 }

@@ -21,7 +21,7 @@
                     <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Log out" KeyTip="Log out" />
                 </RibbonGroup>
                 <RibbonGroup>
-                    <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Send message" KeyTip="Send Message"/>
+                    <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Send message" KeyTip="Send Message" Command="{Binding Path=ChatCommand}"/>
                 </RibbonGroup>
                 <RibbonGroup x:Name="Programm" Header="Program" VerticalAlignment="Stretch"  >
                     <RibbonComboBox ItemsSource="{Binding GetSelectedCombinedSoftware, Mode=OneWay}"></RibbonComboBox>
