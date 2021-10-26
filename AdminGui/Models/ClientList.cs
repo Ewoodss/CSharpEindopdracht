@@ -97,19 +97,28 @@ namespace AdminGui.Models
 			{
 				switch (args.Action)
 				{
-					case NotifyCollectionChangedAction.Add:
-						foreach (Client item in args.NewItems)
-						{
-							this.Clients.Add(item);
-						}
-						break;
-					case NotifyCollectionChangedAction.Remove:
+                    case NotifyCollectionChangedAction.Add:
+                        int offset = 0;
                         foreach (Client item in args.NewItems)
                         {
-                            this.Clients.Remove(item);
+                            this.Clients.Insert(args.NewStartingIndex + offset, item);
+                            offset++;
                         }
                         break;
-					default:
+                    case NotifyCollectionChangedAction.Remove:
+                        if (args.NewStartingIndex >= 0)
+                        {
+                            this.Clients.RemoveAt(args.NewStartingIndex);
+                        }
+                        else
+                        {
+                            foreach (Client item in args.OldItems)
+                            {
+                                this.Clients.Remove(item);
+                            }
+                        }
+                        break;
+                    default:
 						throw new Exception("Unsupported NotifyCollectionChangedEventArgs.Action");
 				}
 			}
