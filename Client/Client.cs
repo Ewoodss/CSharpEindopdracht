@@ -27,6 +27,7 @@ namespace Client
             connection.Start();
             //dit ziet er niet uit als de juiste plek voor dit.
             PowerActions powerActions = new PowerActions(actions);
+            new ChatMessageActions(actions);
         }
 
     }

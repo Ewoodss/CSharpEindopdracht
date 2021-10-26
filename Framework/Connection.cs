@@ -20,6 +20,7 @@ namespace Framework
         public Connection(TcpClient tcpClient)
         {
             this.tcpClient = tcpClient;
+            this.actions = new Actions();
         }
 
         public void Start()
