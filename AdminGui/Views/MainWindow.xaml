@@ -21,8 +21,8 @@
                     <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Log out" KeyTip="Log out" Command="{Binding Path=LogOffCommand}"/>
                 </RibbonGroup>
                 <RibbonGroup x:Name="Programm" Header="Program" >
-                    <RibbonComboBox ItemsSource="{Binding SelectedClient.Softwares.Software, Mode=OneWay}" Width="150" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="100"></RibbonComboBox>
-                    <RibbonButton Label="Start" Command="{Binding Path=StartSoftwareCommand}"  LargeImageSource="/Images/Sleep.png"/>
+                    <ComboBox Name="ProgramComboBox" ItemsSource="{Binding SelectedClient.Softwares.Software, Mode=OneWay}" Width="150" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="100"/>
+                    <RibbonButton Label="Start" Command="{Binding Path=StartSoftwareCommand}"  LargeImageSource="/Images/Sleep.png" Click="RibbonButton_Click"/>
                 </RibbonGroup>
                 <RibbonGroup>
                     <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Send message" KeyTip="Send Message" Command="{Binding Path=ChatCommand}"/>
