@@ -45,6 +45,42 @@ namespace AdminGui
             await this.sendToClients(clients, data);
         }
 
+        public async void SendLock(List<Client> clients)
+        {
+            RequestData<object> data = new RequestData<object>()
+            {
+                Action = "Lock"
+            };
+            await this.sendToClients<object>(clients, data);
+        }
+
+        public async void SendSleep(List<Client> clients)
+        {
+            RequestData<object> data = new RequestData<object>()
+            {
+                Action = "Sleep"
+            };
+            await this.sendToClients<object>(clients, data);
+        }
+
+        public async void SendShutdown(List<Client> clients)
+        {
+            RequestData<object> data = new RequestData<object>()
+            {
+                Action = "Shutdown"
+            };
+            await this.sendToClients<object>(clients, data);
+        }
+
+        public async void SendLogOff(List<Client> clients)
+        {
+            RequestData<object> data = new RequestData<object>()
+            {
+                Action = "LogOff"
+            };
+            await this.sendToClients<object>(clients, data);
+        }
+
         private async Task sendToClients<TData>(List<Client> clients, RequestData<TData> requestData)
         {
             List<string> clientList = clients.Select(x => x.IPAdress).ToList();
