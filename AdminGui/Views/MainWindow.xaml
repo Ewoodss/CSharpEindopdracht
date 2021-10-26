@@ -23,9 +23,8 @@
                 <RibbonGroup>
                     <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Send message" KeyTip="Send Message" Command="{Binding Path=ChatCommand}"/>
                 </RibbonGroup>
-                <RibbonGroup x:Name="Programm" Header="Program" VerticalAlignment="Stretch"  >
-                    <RibbonComboBox ItemsSource="{Binding GetSelectedCombinedSoftware, Mode=OneWay}"></RibbonComboBox>
-                    <RibbonButton Label="Start" Command="{Binding Path=StartSoftwareCommand}"  LargeImageSource="/Images/Sleep.png"/>
+                <RibbonGroup Header="Export">
+                    <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Export" KeyTip="Export" Command="{Binding Path=ExportCommand}"/>
                 </RibbonGroup>
             </RibbonTab>
         </Ribbon>
