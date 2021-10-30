@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Framework.Models;
+using AdminGui.Util;
 
 namespace AdminGui.Models
 {
@@ -13,23 +14,23 @@ namespace AdminGui.Models
     {
         public string IPAdress { get; set; }
 
-        private ProcessList processes;
-        private SoftwareList softwares;
+        private ThreadSafeObservableList<Process> processes;
+        private ThreadSafeObservableList<Software> softwares;
         private bool isSelected = false;
 
         public Client()
         {
-            this.processes = new ProcessList();
-            this.softwares = new SoftwareList();
+            this.processes = new ThreadSafeObservableList<Process>();
+            this.softwares = new ThreadSafeObservableList<Software>();
         }
 
 
-        public ProcessList Processes
+        public ThreadSafeObservableList<Process> Processes
         {
             get { return this.processes; }
         }
 
-        public SoftwareList Softwares
+        public ThreadSafeObservableList<Software> Softwares
         {
             get { return this.softwares; }
         }

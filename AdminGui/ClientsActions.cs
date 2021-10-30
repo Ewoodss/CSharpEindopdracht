@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using AdminGui.Models;
+using AdminGui.Util;
 using Contracts;
 using Framework;
 using Framework.Models;
@@ -37,7 +38,7 @@ namespace AdminGui
                 return false;
             }
 
-            SoftwareList softwares = this.clientViewModel.Clients.Clients.Last().Softwares;
+            ThreadSafeObservableList<Software> softwares = this.clientViewModel.Clients.Items.Last().Softwares;
             softwares.Clear();
 
             foreach (SoftwareRequestItem software in softwareResult)
@@ -45,13 +46,13 @@ namespace AdminGui
                 softwares.Add(new Software() { Name = software.Name});
             }
 
-            return softwares.Software.Count > 1;
+            return softwares.Items.Count > 1;
         }
 
         private bool AddRunningProcesses(RequestData<object> request)
         {
             Console.WriteLine();
-            ProcessList clientProcesses = clientViewModel.Clients.Clients.Last().Processes;
+            ThreadSafeObservableList<Process> clientProcesses = clientViewModel.Clients.Items.Last().Processes;
             clientProcesses.Clear();
             
             List<Process> processes = null;
@@ -69,7 +70,7 @@ namespace AdminGui
 
             processes.ForEach(clientProcesses.Add);
 
-            return clientProcesses.Processes.Count > 1;
+            return clientProcesses.Items.Count > 1;
         }
 
         private bool AddClient(string clientIp)
@@ -78,7 +79,10 @@ namespace AdminGui
             {
                 return false;
             }
-            this.clientViewModel.Clients.Add(clientIp);
+            this.clientViewModel.Clients.Add(new Client()
+            {
+                IPAdress = clientIp
+            });
             return true;
         }
 
@@ -95,7 +99,7 @@ namespace AdminGui
             {
                 return false;
             }
-            this.clientViewModel.Clients.Remove(clientIp);
+            this.clientViewModel.Clients.Remove(this.clientViewModel.Clients.Items.FirstOrDefault(x => x.IPAdress == clientIp));
             return true;
         }
 

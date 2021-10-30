@@ -11,23 +11,25 @@ using Framework.Models;
 using AdminGui.Views;
 using Microsoft.Win32;
 using System.IO;
+using AdminGui.Util;
 
 namespace AdminGui.ViewModels
 {
     public class ClientViewModel : ObservableObject
     {
-        private ClientList clients;
+        //private ClientList clients;
+        private ThreadSafeObservableList<Client> clients;
         private Client selectedClient = null;
         private Software selectedSoftware = null;
         private readonly Admin admin;
 
         public ClientViewModel(Admin admin)
         {
-            this.clients = new ClientList();
+            this.clients = new ThreadSafeObservableList<Client>();
             this.admin = admin;
         }
 
-        public ClientList Clients { get => clients; private set => clients = value; }
+        public ThreadSafeObservableList<Client> Clients { get => clients; private set => clients = value; }
 
         public Client SelectedClient
         {
@@ -65,7 +67,7 @@ namespace AdminGui.ViewModels
 
         public List<Software> GetSelectedCombinedSoftware
         {
-            get { return this.clients.Clients.Where(x => x.IsSelected).Select(x => x.Softwares).SelectMany(x => x.Software).Distinct().ToList(); }
+            get { return this.clients.Items.Where(x => x.IsSelected).Select(x => x.Softwares).SelectMany(x => x.Items).Distinct().ToList(); }
         }
 
         private ICommand chatCommand;
@@ -82,7 +84,7 @@ namespace AdminGui.ViewModels
                             return;
                             
 
-                        List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+                        List<Client> selectedClients = Clients.Items.Where(x => x.IsSelected).ToList();
                         this.admin.SendChatMessage(selectedClients, inputDialog.Answer);
                     },
                     x => true);
@@ -100,7 +102,7 @@ namespace AdminGui.ViewModels
                 {
                     sleepCommand = new RelayCommand(x => 
                     {
-                        List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+                        List<Client> selectedClients = Clients.Items.Where(x => x.IsSelected).ToList();
                         this.admin.SendSleep(selectedClients);
                     }, 
                     x => true);
@@ -118,7 +120,7 @@ namespace AdminGui.ViewModels
                 {
                     lockCommand = new RelayCommand(x => 
                     {
-                        List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+                        List<Client> selectedClients = Clients.Items.Where(x => x.IsSelected).ToList();
                         this.admin.SendLock(selectedClients);
                     }, x => true);
                 }
@@ -135,7 +137,7 @@ namespace AdminGui.ViewModels
                 {
                     shutDownCommand = new RelayCommand(x => 
                     {
-                        List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+                        List<Client> selectedClients = Clients.Items.Where(x => x.IsSelected).ToList();
                         this.admin.SendShutdown(selectedClients);
                     }, x => true);
                 }
@@ -152,7 +154,7 @@ namespace AdminGui.ViewModels
                 {
                     logOffCommand = new RelayCommand(x =>
                     {
-                        List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+                        List<Client> selectedClients = Clients.Items.Where(x => x.IsSelected).ToList();
                         this.admin.SendLogOff(selectedClients);
                     }, x => true);
                 }
@@ -221,7 +223,7 @@ namespace AdminGui.ViewModels
 
         public void ClientList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+            List<Client> selectedClients = Clients.Items.Where(x => x.IsSelected).ToList();
             this.admin.GetProcceses(selectedClients);
             this.admin.GetSoftware(selectedClients);
             this.NotifyPropertyChanged("GetSelectedCombinedSoftware");

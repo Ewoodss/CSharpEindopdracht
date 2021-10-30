@@ -21,7 +21,7 @@
                     <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Log out" KeyTip="Log out" Command="{Binding Path=LogOffCommand}"/>
                 </RibbonGroup>
                 <RibbonGroup x:Name="Programm" Header="Program" >
-                    <ComboBox Name="ProgramComboBox" ItemsSource="{Binding SelectedClient.Softwares.Software, Mode=OneWay}" Width="150" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="100"/>
+                    <ComboBox Name="ProgramComboBox" ItemsSource="{Binding SelectedClient.Softwares.Items, Mode=OneWay}" Width="150" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="100"/>
                     <RibbonButton Label="Start" Command="{Binding Path=StartSoftwareCommand}"  LargeImageSource="/Images/Sleep.png"/>
                 </RibbonGroup>
                 <RibbonGroup>
@@ -30,7 +30,7 @@
                 </RibbonGroup>
             </RibbonTab>
         </Ribbon>
-        <ListView DockPanel.Dock="Left" Name="ClientList" ItemsSource="{Binding Clients.Clients, Mode=OneWay}" SelectedItem="{Binding SelectedClient}" SelectionChanged="ClientList_SelectionChanged">
+        <ListView DockPanel.Dock="Left" Name="ClientList" ItemsSource="{Binding Clients.Items, Mode=OneWay}" SelectedItem="{Binding SelectedClient}" SelectionChanged="ClientList_SelectionChanged">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="IP adres" DisplayMemberBinding="{Binding IPAdress}" Width="100"></GridViewColumn>
@@ -42,7 +42,7 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding SelectedClient.Processes.Processes, Mode=OneWay}">
+        <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding SelectedClient.Processes.Items, Mode=OneWay}">
             <ListView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Kill"

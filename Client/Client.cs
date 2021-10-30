@@ -13,7 +13,7 @@ namespace Client
         private string uuid;
         private Actions actions;
 
-        public Client(string address = "192.168.1.154")
+        public Client(string address = "localhost")
         {
             actions = new Actions();
             TcpClient tcpClient = new TcpClient(address, 5001);
