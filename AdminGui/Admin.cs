@@ -7,9 +7,8 @@ using System.Threading.Tasks;
 using System.Windows.Documents;
 using AdminGui.Models;
 using Framework;
-using AdminGui.Models;
 using Contracts;
-using System.Linq;
+using Framework.Models;
 
 namespace AdminGui
 {
@@ -90,6 +89,26 @@ namespace AdminGui
                 Action = "LogOff"
             };
             await this.SendToClients<object>(clients, data);
+        }
+
+        public async void KillProcess(Client client, Process process)
+        {
+            RequestData<KillRunnningProcessCommand> data = new RequestData<KillRunnningProcessCommand>()
+            {
+                Action = "KillRunningProcess",
+                Data = new KillRunnningProcessCommand()
+                {
+                    PID = process.PID
+                }
+            };
+            await this.SendToClients(new List<Client>() {client}, data);
+        }
+
+        public async void GetSoftware(List<Client> selectedClients)
+        {
+            RequestData<dynamic> requestData = new RequestData<dynamic>();
+            requestData.Action = "List software";
+            await SendToClients(selectedClients, requestData);
         }
 
         private async Task SendToClients<TData>(List<Client> clients, RequestData<TData> requestData)

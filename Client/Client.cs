@@ -30,6 +30,7 @@ namespace Client
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 TaskManagerActions taskManagerActions = new TaskManagerActions(actions, connection);
+                new SoftwareActions(actions, connection);
             }
             PowerActions powerActions = new PowerActions(actions);
             new ChatMessageActions(actions);
