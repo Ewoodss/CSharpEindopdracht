@@ -99,7 +99,8 @@ namespace Client
             {
                 Framework.Models.Process modelProcess = new Framework.Models.Process();
                 modelProcess.Name = process.MainWindowTitle;
-                modelProcess.MemoryUsage = process.WorkingSet64;
+                //standaard is het bytes  om mb krijgen delen door 1024^2 dat is 1048576
+                modelProcess.MemoryUsage = process.WorkingSet64 / 1048576d;
                 modelProcess.PID = process.Id;
                 if (modelProcess.Name.Length < 1)
                 {

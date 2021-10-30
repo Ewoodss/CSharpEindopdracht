@@ -27,6 +27,7 @@ namespace AdminGui.ViewModels
         {
             this.clients = new ThreadSafeObservableList<Client>();
             this.admin = admin;
+           
         }
 
         public ThreadSafeObservableList<Client> Clients { get => clients; private set => clients = value; }
@@ -173,7 +174,8 @@ namespace AdminGui.ViewModels
                 {
                     startSoftwareCommand = new RelayCommand(x =>
                     {
-                        MessageBox.Show("startSoftwareCommand");
+                        List<Client> selectedClients = Clients.Items.Where(x => x.IsSelected).ToList();
+                        this.admin.StartSoftware(selectedClients,selectedSoftware.Name);
                     },
                     x => true);
                 }

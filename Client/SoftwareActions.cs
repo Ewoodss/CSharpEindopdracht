@@ -11,17 +11,39 @@ namespace Client
     public class SoftwareActions
     {
         private readonly string localIp;
+        private Dictionary<string, string> software { get; set; }
 
         public SoftwareActions(Actions actions, Connection connection)
         {
             actions.AddAction("List software", ListSoftware);
+            actions.AddAction("StartSoftware", StartSoftware);
             localIp = connection.GetLocalIp();
+        }
+
+        private bool StartSoftware(RequestData<object> request)
+        {
+            if (request.Data is string program)
+            {
+                if (software.ContainsKey(program))
+                {
+                    string s = software[program];
+                    System.Diagnostics.Process.Start(s);
+                    return true;
+                }
+                
+            }
+
+            return false;
         }
 
         private bool ListSoftware(RequestData<dynamic> request)
         {
             RequestData<dynamic> responseData = new RequestData<dynamic>();
-            Dictionary<string, string> software = SoftwareSearch.Result();
+            if (software == null)
+            {
+                software = SoftwareSearch.Result();
+            }
+
             responseData.Action = "List software";
             responseData.Data = software.Select(x => new SoftwareRequestItem { Name = x.Key, Path = x.Value}).ToList();
             responseData.Origin = localIp;
