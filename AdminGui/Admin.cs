@@ -110,6 +110,14 @@ namespace AdminGui
             requestData.Action = "List software";
             await SendToClients(selectedClients, requestData);
         }
+        public async void StartSoftware(List<Client> selectedClients, string programName)
+        {
+            RequestData<dynamic> requestData = new RequestData<dynamic>();
+            requestData.Action = "StartSoftware";
+            requestData.Data = programName;
+            await SendToClients(selectedClients, requestData);
+        }
+
 
         private async Task SendToClients<TData>(List<Client> clients, RequestData<TData> requestData)
         {

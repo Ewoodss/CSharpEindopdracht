@@ -174,7 +174,8 @@ namespace AdminGui.ViewModels
                 {
                     startSoftwareCommand = new RelayCommand(x =>
                     {
-                        MessageBox.Show("startSoftwareCommand");
+                        List<Client> selectedClients = Clients.Items.Where(x => x.IsSelected).ToList();
+                        this.admin.StartSoftware(selectedClients,selectedSoftware.Name);
                     },
                     x => true);
                 }
