@@ -42,7 +42,7 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding SelectedClient.Processes.Items, Mode=OneWay}">
+        <ListView Name="processListView" DockPanel.Dock="Bottom" ItemsSource="{Binding SelectedClient.Processes.Items, Mode=OneWay}">
             <ListView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Kill"
@@ -50,7 +50,6 @@
             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
                 </ContextMenu>
             </ListView.ContextMenu>
-        <ListView Name="processListView" DockPanel.Dock="Bottom" ItemsSource="{Binding SelectedClient.Processes.Processes, Mode=OneWay}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Naam" Width="100" DisplayMemberBinding="{Binding Name}"></GridViewColumn>
