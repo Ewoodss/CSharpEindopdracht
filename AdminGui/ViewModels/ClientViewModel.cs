@@ -9,26 +9,27 @@ using System.Linq;
 using System.Windows.Controls;
 using Framework.Models;
 using AdminGui.Views;
+using Microsoft.Win32;
+using System.IO;
+using AdminGui.Util;
 
 namespace AdminGui.ViewModels
 {
     public class ClientViewModel : ObservableObject
     {
-        private ClientList clients;
+        //private ClientList clients;
+        private ThreadSafeObservableList<Client> clients;
         private Client selectedClient = null;
+        private Software selectedSoftware = null;
         private readonly Admin admin;
 
         public ClientViewModel(Admin admin)
         {
-            Process process = new Process() { Name = "Hallo", MemoryUsage = 10.2, PID = 10, SessionName = "Ewout", SessionNumber = 69 };
-            this.clients = new ClientList();
-            // this.Clients.Add(new Client() { IPAdress = "Luuk", Processes = new ObservableCollection<Process>() { process, process } });
-            // this.Clients.Add(new Client() { IPAdress = "Twan", Processes = new ObservableCollection<Process>() { process, process } });
-            // this.Clients.Add(new Client() { IPAdress = "Ewout", Processes = new ObservableCollection<Process>() { process, process } });
+            this.clients = new ThreadSafeObservableList<Client>();
             this.admin = admin;
         }
 
-        public ClientList Clients { get => clients; private set => clients = value; }
+        public ThreadSafeObservableList<Client> Clients { get => clients; private set => clients = value; }
 
         public Client SelectedClient
         {
@@ -47,9 +48,26 @@ namespace AdminGui.ViewModels
             }
         }
 
+        public Software SelectedSoftware
+        {
+            get { return this.selectedSoftware; }
+            set
+            {
+                if(!Equals(this.selectedSoftware, value))
+                {
+                    if (this.selectedSoftware == null)
+                    {
+                        this.selectedSoftware = new Software();
+                    }
+                    this.selectedSoftware = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
         public List<Software> GetSelectedCombinedSoftware
         {
-            get { return this.clients.Clients.Where(x => x.IsSelected).SelectMany(x => x.Softwares).Distinct().ToList(); }
+            get { return this.clients.Items.Where(x => x.IsSelected).Select(x => x.Softwares).SelectMany(x => x.Items).Distinct().ToList(); }
         }
 
         private ICommand chatCommand;
@@ -66,7 +84,7 @@ namespace AdminGui.ViewModels
                             return;
                             
 
-                        List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+                        List<Client> selectedClients = Clients.Items.Where(x => x.IsSelected).ToList();
                         this.admin.SendChatMessage(selectedClients, inputDialog.Answer);
                     },
                     x => true);
@@ -84,7 +102,7 @@ namespace AdminGui.ViewModels
                 {
                     sleepCommand = new RelayCommand(x => 
                     {
-                        List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+                        List<Client> selectedClients = Clients.Items.Where(x => x.IsSelected).ToList();
                         this.admin.SendSleep(selectedClients);
                     }, 
                     x => true);
@@ -102,7 +120,7 @@ namespace AdminGui.ViewModels
                 {
                     lockCommand = new RelayCommand(x => 
                     {
-                        List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+                        List<Client> selectedClients = Clients.Items.Where(x => x.IsSelected).ToList();
                         this.admin.SendLock(selectedClients);
                     }, x => true);
                 }
@@ -119,7 +137,7 @@ namespace AdminGui.ViewModels
                 {
                     shutDownCommand = new RelayCommand(x => 
                     {
-                        List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+                        List<Client> selectedClients = Clients.Items.Where(x => x.IsSelected).ToList();
                         this.admin.SendShutdown(selectedClients);
                     }, x => true);
                 }
@@ -136,7 +154,7 @@ namespace AdminGui.ViewModels
                 {
                     logOffCommand = new RelayCommand(x =>
                     {
-                        List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+                        List<Client> selectedClients = Clients.Items.Where(x => x.IsSelected).ToList();
                         this.admin.SendLogOff(selectedClients);
                     }, x => true);
                 }
@@ -163,11 +181,52 @@ namespace AdminGui.ViewModels
             }
         }
 
+        private ICommand exportCommand;
+        public ICommand ExportCommand
+        {
+            get
+            {
+                if (exportCommand == null)
+                {
+                    exportCommand = new RelayCommand(x =>
+                    {
+                        SaveFileDialog saveFileDialog = new SaveFileDialog();
+                        saveFileDialog.Filter = "Csv file (*.csv)|*.csv";
+                        if (!saveFileDialog.ShowDialog().Value)
+                            return;
+
+                        string csvValue = AdminGui.Parsers.ProcessListToCSV.Parse(this.selectedClient.Processes);
+                        File.WriteAllText(saveFileDialog.FileName, csvValue);
+                    },
+                    x => true);
+                }
+                return exportCommand;
+            }
+        }
+
+        private ICommand killProcessCommand;
+        public ICommand KillProcessCommand
+        {
+            get
+            {
+                if (killProcessCommand == null)
+                {
+                    killProcessCommand = new RelayCommand(x =>
+                    {
+                        this.admin.KillProcess(this.SelectedClient, (x as Process));
+                    },
+                    x => true);
+                }
+                return killProcessCommand;
+            }
+        }
+
         public void ClientList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.NotifyPropertyChanged("GetSelectedCombinedSoftware");
-            List<Client> selectedClients = Clients.Clients.Where(x => x.IsSelected).ToList();
+            List<Client> selectedClients = Clients.Items.Where(x => x.IsSelected).ToList();
             this.admin.GetProcceses(selectedClients);
+            this.admin.GetSoftware(selectedClients);
+            this.NotifyPropertyChanged("GetSelectedCombinedSoftware");
         }
     }
 }

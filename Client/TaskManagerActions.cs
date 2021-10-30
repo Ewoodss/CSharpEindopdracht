@@ -5,7 +5,9 @@ using System.Dynamic;
 using System.Reflection.Metadata.Ecma335;
 using System.Threading;
 using System.Threading.Tasks;
+using Contracts;
 using Framework;
+using Newtonsoft.Json.Linq;
 
 namespace Client
 {
@@ -22,6 +24,21 @@ namespace Client
             actions.AddAction("GetTotalDiskUsage", GetTotalDiskUsage);
             actions.AddAction("GetTotalGpuUsage", GetTotalGpuUsage);
             actions.AddAction("GetRunningProcesses", GetRunningProcesses);
+            actions.AddAction("KillRunningProcess", KillRunningProcess);
+        }
+
+        private bool KillRunningProcess(RequestData<dynamic> request)
+        {
+            JObject result = request.Data;
+            KillRunnningProcessCommand command = result.ToObject<KillRunnningProcessCommand>();
+            Process selectedProcess = Process.GetProcessById(command.PID);
+
+            if (selectedProcess == null)
+                return false;
+
+            selectedProcess.Kill(true);
+
+            return false;
         }
 
         private bool GetRunningProcesses(RequestData<dynamic> request)

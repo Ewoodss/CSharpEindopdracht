@@ -29,8 +29,8 @@ namespace Framework
             this.networkStream.BeginRead(buffer, 0, buffer.Length, new AsyncCallback(onRead), null);
         }
 
-        public string GetRemoteIp() => tcpClient.Client.LocalEndPoint?.ToString();
-        public string GetLocalIp() => tcpClient.Client.RemoteEndPoint?.ToString();
+        public string GetRemoteIp() => tcpClient.Client.RemoteEndPoint?.ToString();
+        public string GetLocalIp() => tcpClient.Client.LocalEndPoint?.ToString();
 
         public async Task SendImage(Image img)
         {
