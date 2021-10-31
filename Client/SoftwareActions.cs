@@ -41,7 +41,8 @@ namespace Client
             RequestData<dynamic> responseData = new RequestData<dynamic>();
             if (software == null)
             {
-                software = SoftwareSearch.Result();
+                Dictionary<string, string> dictionary = SoftwareSearch.Result();
+                software = dictionary.OrderBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
             }
 
             responseData.Action = "List software";
