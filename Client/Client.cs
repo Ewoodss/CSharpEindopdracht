@@ -9,7 +9,7 @@ namespace Client
 {
     public class Client
     {
-        private Connection connection;
+        public Connection connection;
         private string uuid;
         private Actions actions;
 
@@ -18,9 +18,8 @@ namespace Client
             actions = new Actions();
             TcpClient tcpClient = new TcpClient(address, 5001);
             this.connection = new Connection(tcpClient);
-            
+
             connection.actions = actions;
-            
         }
 
         public void Start()

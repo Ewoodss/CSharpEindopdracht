@@ -91,7 +91,7 @@ namespace Client
             return usage > 0.0f;
         }
 
-        public List<Framework.Models.Process> CurrentRunningProcesses()
+        public static List<Framework.Models.Process> CurrentRunningProcesses()
         {
             List<Framework.Models.Process> processesList = new List<Framework.Models.Process>();
             Process[] processes = Process.GetProcesses();
@@ -155,7 +155,7 @@ namespace Client
         static readonly PerformanceCounter
             DiskCounter = new PerformanceCounter("PhysicalDisk", "% Disk Time", "_Total");
 
-        private static float CurrentDiskTotalUsage()
+        public static float CurrentDiskTotalUsage()
         {
             return DiskCounter.NextValue();
         }
@@ -163,7 +163,7 @@ namespace Client
         static readonly PerformanceCounter CpuCounter =
             new PerformanceCounter("Processor", "% Processor Time", "_Total");
 
-        private static float CurrentCpuTotalUsage()
+        public static float CurrentCpuTotalUsage()
         {
             return CpuCounter.NextValue();
         }
@@ -171,7 +171,7 @@ namespace Client
         static readonly PerformanceCounter MemCounter =
             new PerformanceCounter("Memory", "% Committed Bytes In Use", null);
 
-        private static float CurrentMemoryTotalUsage()
+        public static float CurrentMemoryTotalUsage()
         {
             return MemCounter.NextValue();
         }
