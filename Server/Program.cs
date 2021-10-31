@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Server
 {
     class Program
     {
-        public Server Server {get;set;}
-
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Server server = new Server(5001, 5002);
+            server.Start();
+            //Console.ReadKey();
+            Task.Delay(-1).Wait();
         }
     }
 }

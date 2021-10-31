@@ -4,10 +4,26 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <StartupObject>AdminGui.App</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Sleep.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Contracts\Contracts.csproj" />
     <ProjectReference Include="..\Framework\Framework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Sleep.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Util\" />
   </ItemGroup>
 
 </Project>

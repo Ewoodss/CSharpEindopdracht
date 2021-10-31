@@ -1,0 +1,84 @@
+﻿<Window x:Class="AdminGui.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AdminGui"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <DockPanel Margin="0,0,0,0">
+        <Ribbon DockPanel.Dock="Top" x:Name="Ribbon" ShowQuickAccessToolBarOnTop="False">
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu  Visibility="Collapsed"/>
+            </Ribbon.ApplicationMenu>
+            <RibbonTab x:Name="ClientTab" 
+                              Header="Client">
+                <RibbonGroup x:Name="PowerActionsGroup" 
+                                    Header="Power Actions">
+                    <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Sleep" KeyTip="Sleep" Command="{Binding Path=SleepCommand}"/>
+                    <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Shutdown" KeyTip="Shutdown" Command="{Binding Path=ShutdownCommand}"/>
+                    <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Lock" KeyTip="Lock" Command="{Binding Path=LockCommand}"/>
+                    <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Log out" KeyTip="Log out" Command="{Binding Path=LogOffCommand}"/>
+                </RibbonGroup>
+                <RibbonGroup x:Name="Programm" Header="Program" >
+                    <ComboBox  Name="ProgramComboBox" ItemsSource="{Binding SelectedClient.Softwares.Items, Mode=OneWay}" SelectedItem="{Binding SelectedSoftware }" Width="150" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="100"/>
+                    <RibbonButton Label="Start" Command="{Binding Path=StartSoftwareCommand}"  LargeImageSource="/Images/Sleep.png"/>
+                </RibbonGroup>
+                <RibbonGroup>
+                    <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Send message" KeyTip="Send Message" Command="{Binding Path=ChatCommand}"/>
+                    <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Export" KeyTip="Export" Command="{Binding Path=ExportCommand}"/>
+                </RibbonGroup>
+            </RibbonTab>
+        </Ribbon>
+        <ListView DockPanel.Dock="Left" Name="ClientList" ItemsSource="{Binding Clients.Items, Mode=OneWay}" SelectedItem="{Binding SelectedClient}" SelectionChanged="ClientList_SelectionChanged">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="IP adres" DisplayMemberBinding="{Binding IPAdress}" Width="100"></GridViewColumn>
+                </GridView>
+            </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected}"></Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        <ListView Name="processListView" DockPanel.Dock="Bottom" ItemsSource="{Binding SelectedClient.Processes.Items, Mode=OneWay}" >
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Kill"
+            Command="{Binding KillProcessCommand}"
+            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Name}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Name" Click="nameColumnHeader_Click">Naam</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding PID}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="PID" Click="nameColumnHeader_Click">PID</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding SessionName}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="SessionName" Click="nameColumnHeader_Click">Sessie naam</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding SessionNumber}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="SessionNumber" Click="nameColumnHeader_Click">Sessie nummer</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding MemoryUsage}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="MemoryUsage" Click="nameColumnHeader_Click">Memmory mb</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</Window>
