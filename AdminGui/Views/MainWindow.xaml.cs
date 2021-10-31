@@ -26,7 +26,9 @@ namespace AdminGui.Views
 
         public MainWindow()
         {
+            
             InitializeComponent();
+
         }
 
         private void nameColumnHeader_Click(object sender, RoutedEventArgs e)

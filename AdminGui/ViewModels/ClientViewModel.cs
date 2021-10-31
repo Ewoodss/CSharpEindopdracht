@@ -27,7 +27,9 @@ namespace AdminGui.ViewModels
         {
             this.clients = new ThreadSafeObservableList<Client>();
             this.admin = admin;
-           
+            
+
+
         }
 
         public ThreadSafeObservableList<Client> Clients { get => clients; private set => clients = value; }

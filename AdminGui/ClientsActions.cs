@@ -43,6 +43,7 @@ namespace AdminGui
             if (softwares == null)
                 return false;
 
+
             softwares.Clear();
 
             foreach (SoftwareRequestItem software in softwareResult)
@@ -56,10 +57,12 @@ namespace AdminGui
         private bool AddRunningProcesses(RequestData<object> request)
         {
             Console.WriteLine();
+
             ThreadSafeObservableList<Process> clientProcesses = clientViewModel.Clients.Items.FirstOrDefault(x => x.IPAdress == request.Origin)?.Processes;
 
             if (clientProcesses == null)
                 return false;
+
 
             clientProcesses.Clear();
             
