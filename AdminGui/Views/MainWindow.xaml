@@ -42,7 +42,7 @@
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>
-        <ListView Name="processListView" DockPanel.Dock="Bottom" ItemsSource="{Binding SelectedClient.Processes.Items, Mode=OneWay}">
+        <ListView Name="processListView" DockPanel.Dock="Bottom" ItemsSource="{Binding SelectedClient.Processes.Items, Mode=OneWay}" >
             <ListView.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Kill"
@@ -51,12 +51,32 @@
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>
-                <GridView >
-                    <GridViewColumn Header="Naam" Width="100" DisplayMemberBinding="{Binding Name}"></GridViewColumn>
-                    <GridViewColumn Header="PID" Width="100" DisplayMemberBinding="{Binding PID}"></GridViewColumn>
-                    <GridViewColumn Header="Sessie naam" Width="100" DisplayMemberBinding="{Binding SessionName}"></GridViewColumn>
-                    <GridViewColumn Header="Sessie nummer" Width="100" DisplayMemberBinding="{Binding SessionNumber}"></GridViewColumn>
-                    <GridViewColumn Header="Memmory mb" Width="100" DisplayMemberBinding="{Binding MemoryUsage}"></GridViewColumn>
+                <GridView>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding Name}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Name" Click="nameColumnHeader_Click">Naam</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding PID}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="PID" Click="nameColumnHeader_Click">PID</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding SessionName}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="SessionName" Click="nameColumnHeader_Click">Sessie naam</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding SessionNumber}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="SessionNumber" Click="nameColumnHeader_Click">Sessie nummer</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn Width="100" DisplayMemberBinding="{Binding MemoryUsage}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="MemoryUsage" Click="nameColumnHeader_Click">Memmory mb</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
                 </GridView>
             </ListView.View>
         </ListView>
