@@ -21,7 +21,7 @@
                     <RibbonButton LargeImageSource="/Images/Sleep.png" Label="Log out" KeyTip="Log out" Command="{Binding Path=LogOffCommand}"/>
                 </RibbonGroup>
                 <RibbonGroup x:Name="Programm" Header="Program" >
-                    <ComboBox Name="ProgramComboBox" ItemsSource="{Binding SelectedClient.Softwares.Items, Mode=OneWay}" SelectedItem="{Binding SelectedSoftware }" Width="150" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="100"/>
+                    <ComboBox  Name="ProgramComboBox" ItemsSource="{Binding SelectedClient.Softwares.Items, Mode=OneWay}" SelectedItem="{Binding SelectedSoftware }" Width="150" ScrollViewer.VerticalScrollBarVisibility="Auto" MaxHeight="100"/>
                     <RibbonButton Label="Start" Command="{Binding Path=StartSoftwareCommand}"  LargeImageSource="/Images/Sleep.png"/>
                 </RibbonGroup>
                 <RibbonGroup>
@@ -51,7 +51,7 @@
                 </ContextMenu>
             </ListView.ContextMenu>
             <ListView.View>
-                <GridView>
+                <GridView >
                     <GridViewColumn Header="Naam" Width="100" DisplayMemberBinding="{Binding Name}"></GridViewColumn>
                     <GridViewColumn Header="PID" Width="100" DisplayMemberBinding="{Binding PID}"></GridViewColumn>
                     <GridViewColumn Header="Sessie naam" Width="100" DisplayMemberBinding="{Binding SessionName}"></GridViewColumn>

@@ -23,7 +23,9 @@ namespace AdminGui.Views
     {
         public MainWindow()
         {
+            
             InitializeComponent();
+
         }
 
         private void ClientList_SelectionChanged(object sender, SelectionChangedEventArgs e)

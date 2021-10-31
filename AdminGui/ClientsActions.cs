@@ -38,7 +38,7 @@ namespace AdminGui
                 return false;
             }
 
-            string IpAddress = request.Origin.Split(':').FirstOrDefault();
+            string IpAddress = request.Origin;
 
             ThreadSafeObservableList<Software> softwares = this.clientViewModel.Clients.Items.FirstOrDefault(x => x.IPAdress == IpAddress).Softwares;
             softwares.Clear();
@@ -54,7 +54,7 @@ namespace AdminGui
         private bool AddRunningProcesses(RequestData<object> request)
         {
             Console.WriteLine();
-            string IpAddress = request.Origin.Split(':').FirstOrDefault();
+            string IpAddress = request.Origin;
             ThreadSafeObservableList<Process> clientProcesses = clientViewModel.Clients.Items.FirstOrDefault(x => x.IPAdress == IpAddress).Processes;
             clientProcesses.Clear();
             
