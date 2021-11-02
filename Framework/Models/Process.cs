@@ -14,5 +14,10 @@ namespace Framework.Models
         {
             return HashCode.Combine(PID, SessionNumber);
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj.GetType() == this.GetType() && this.PID == (obj as Process).PID && this.SessionNumber == (obj as Process).SessionNumber;
+        }
     }
 }

@@ -19,9 +19,15 @@ namespace AdminGui.Util
         private readonly ConcurrentQueue<NotifyCollectionChangedEventArgs> _uiItemQueue = new ConcurrentQueue<NotifyCollectionChangedEventArgs>();
 
         public ThreadSafeObservableList()
+            : this(Application.Current.Dispatcher)
+        {
+
+        }
+
+        public ThreadSafeObservableList(Dispatcher dispatcher)
         {
             this.items = new ObservableCollection<T>();
-            this.Dispatcher = Application.Current.Dispatcher;
+            this.Dispatcher = dispatcher;
         }
 
         public Dispatcher Dispatcher { get; set; }
