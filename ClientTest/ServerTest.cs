@@ -9,7 +9,7 @@ namespace Testing
     [TestClass]
     public class ServerTest
     {
-        static Server.Server server = new Server.Server("127.0.0.1", 5001, 5002);
+        static Server.Server server = new Server.Server( 5001, 5002);
 
 
         [ClassInitialize]

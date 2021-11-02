@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using AdminGui.Models;
+using AdminGui.Util;
 using Framework.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -11,7 +12,7 @@ namespace Testing
     [TestClass]
     public class AdminTest
     {
-        private static ProcessList processList = new()
+        private static ThreadSafeObservableList<Process> processList = new()
         {
             Dispatcher = Dispatcher.CurrentDispatcher
         };
@@ -43,14 +44,14 @@ namespace Testing
             processList.Add(process2);
             Task.Delay(1000).Wait();
 
-            int processesCount = processList.Processes.Count;
+            int processesCount = processList.Items.Count;
             Assert.IsTrue(processesCount == 1);
         }
 
         [TestMethod]
         public void NoDuplicateProcesses2()
         {
-            ProcessList processList = new ProcessList();
+            ThreadSafeObservableList<Process> processList = new ThreadSafeObservableList<Process>();
             Process process = new Process
             {
                 Name = "henk",
@@ -72,14 +73,14 @@ namespace Testing
             processList.Add(process2);
             Task.Delay(1000).Wait();
 
-            int processesCount = processList.Processes.Count;
+            int processesCount = processList.Items.Count;
             Assert.IsTrue(processesCount == 1);
         }
 
         [TestMethod]
         public void Processes1()
         {
-            ProcessList processList = new ProcessList();
+            ThreadSafeObservableList<Process> processList = new ThreadSafeObservableList<Process>();
             Process process = new Process
             {
                 Name = "henk",
@@ -101,7 +102,7 @@ namespace Testing
             processList.Add(process2);
             Task.Delay(1000).Wait();
 
-            int processesCount = processList.Processes.Count;
+            int processesCount = processList.Items.Count;
             Assert.IsTrue(processesCount == 2);
         }
     }
