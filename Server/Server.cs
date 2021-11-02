@@ -42,6 +42,12 @@ namespace Server
             //Console.WriteLine($"Started listining for clients on {host}:{adminPort}");
         }
 
+        public void Stop()
+        {
+            this.clientTcpListner.Stop();
+            this.adminTcpListner.Stop();
+        }
+
         private void onClientConnect(IAsyncResult ar)
         {
             TcpClient tcpClient = this.clientTcpListner.EndAcceptTcpClient(ar);

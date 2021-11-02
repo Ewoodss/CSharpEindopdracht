@@ -39,6 +39,7 @@ namespace Testing
             Client.Client client = new Client.Client(ip);
             string remoteIp = client.connection.GetRemoteIp();
             Assert.IsTrue(remoteIp.Contains(ip));
+            tcpListener.Stop();
         }
     }
 }

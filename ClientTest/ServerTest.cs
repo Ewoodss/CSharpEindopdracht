@@ -9,12 +9,12 @@ namespace Testing
     [TestClass]
     public class ServerTest
     {
-        static Server.Server server = new Server.Server( 5001, 5002);
+        private Server.Server server;
 
-
-        [ClassInitialize]
-        public static void AssemblyInit(TestContext context)
+        [TestInitialize]
+        public void AssemblyInit()
         {
+            server = new Server.Server(5001, 5002);
             server.Start();
         }
 
@@ -30,6 +30,12 @@ namespace Testing
         {
             TcpClient tcpAdminClient = new TcpClient("127.0.0.1", 5002);
             Assert.IsTrue(tcpAdminClient.Connected);
+        }
+
+        [TestCleanup]
+        public void Clean()
+        {
+            this.server.Stop();
         }
     }
 }
