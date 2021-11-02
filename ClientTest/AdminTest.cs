@@ -1,8 +1,10 @@
 ﻿using System.Net.Sockets;
+using System.Security.Permissions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using AdminGui.Models;
+using AdminGui.Util;
 using Framework.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -11,17 +13,20 @@ namespace Testing
     [TestClass]
     public class AdminTest
     {
-        private static ProcessList processList = new()
+        private Dispatcher dispatcher;
+        private ThreadSafeObservableList<Process> processList;
+
+        [TestInitialize]
+        public void Start()
         {
-            Dispatcher = Dispatcher.CurrentDispatcher
-        };
+            this.dispatcher = Dispatcher.CurrentDispatcher;
+            processList = new(this.dispatcher);
+        }
         
-
         [TestMethod]
-
         public void NoDuplicateProcesses()
         {
-
+            this.processList.Clear();
             Process process = new Process
             {
                 Name = "henk",
@@ -32,6 +37,9 @@ namespace Testing
             };
 
             processList.Add(process);
+
+            this.DoActions();
+
             Process process2 = new Process
             {
                 Name = "henk",
@@ -41,16 +49,17 @@ namespace Testing
                 MemoryUsage = 243576
             };
             processList.Add(process2);
-            Task.Delay(1000).Wait();
+            DoActions();
+            Task.Delay(100).Wait();
 
-            int processesCount = processList.Processes.Count;
+            int processesCount = processList.Items.Count;
             Assert.IsTrue(processesCount == 1);
         }
 
         [TestMethod]
         public void NoDuplicateProcesses2()
         {
-            ProcessList processList = new ProcessList();
+            this.processList.Clear();
             Process process = new Process
             {
                 Name = "henk",
@@ -61,6 +70,9 @@ namespace Testing
             };
 
             processList.Add(process);
+
+            DoActions();
+
             Process process2 = new Process
             {
                 Name = "lololo",
@@ -70,16 +82,17 @@ namespace Testing
                 MemoryUsage = 243576
             };
             processList.Add(process2);
-            Task.Delay(1000).Wait();
+            DoActions();
+            Task.Delay(100).Wait();
 
-            int processesCount = processList.Processes.Count;
+            int processesCount = processList.Items.Count;
             Assert.IsTrue(processesCount == 1);
         }
 
         [TestMethod]
         public void Processes1()
         {
-            ProcessList processList = new ProcessList();
+            this.processList.Clear();
             Process process = new Process
             {
                 Name = "henk",
@@ -90,6 +103,9 @@ namespace Testing
             };
 
             processList.Add(process);
+
+            DoActions();
+
             Process process2 = new Process
             {
                 Name = "lololo",
@@ -99,10 +115,25 @@ namespace Testing
                 MemoryUsage = 243576
             };
             processList.Add(process2);
-            Task.Delay(1000).Wait();
+            DoActions();
+            Task.Delay(100).Wait();
 
-            int processesCount = processList.Processes.Count;
+            int processesCount = processList.Items.Count;
             Assert.IsTrue(processesCount == 2);
+        }
+
+        private void DoActions()
+        {
+            DispatcherFrame frame = new DispatcherFrame();
+            this.dispatcher.BeginInvoke(DispatcherPriority.Background,
+                new DispatcherOperationCallback(ExitFrame), frame);
+            Dispatcher.PushFrame(frame);
+        }
+
+        private static object ExitFrame(object frame)
+        {
+            ((DispatcherFrame)frame).Continue = false;
+            return null;
         }
     }
 }
